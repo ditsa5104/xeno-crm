@@ -1,13 +1,17 @@
 import os
 from pathlib import Path
 import environ
+from kombu import Queue
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
 )
-environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
+# Only read .env file if it exists (local dev). On Render, env vars are injected directly.
+_env_file = os.path.join(BASE_DIR.parent, '.env')
+if os.path.exists(_env_file):
+    environ.Env.read_env(_env_file)
 
 SECRET_KEY = env('SECRET_KEY', default='dev-insecure-secret-change-me')
 DEBUG = env.bool('DEBUG', default=False)
@@ -88,7 +92,11 @@ CACHES = {
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_TASK_DEFAULT_QUEUE = 'default'
-CELERY_TASK_QUEUES = ('default', 'campaigns', 'scoring')
+CELERY_TASK_QUEUES = (
+    Queue('default'),
+    Queue('campaigns'),
+    Queue('scoring'),
+)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
