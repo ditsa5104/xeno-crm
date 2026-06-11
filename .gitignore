@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+staticfiles/
+mediafiles/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Env
+.env
+
+# macOS
+.DS_Store
+
+# Docker
+*.override.yml
