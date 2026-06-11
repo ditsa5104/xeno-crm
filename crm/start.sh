@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Free-tier startup: run Celery worker + beat as background processes,
-# then start daphne in the foreground.
+# Free-tier startup: migrate, then run Celery worker + beat as background
+# processes, then start daphne in the foreground.
 set -e
+
+echo "Running migrations..."
+python manage.py makemigrations --noinput
+python manage.py migrate --noinput
 
 echo "Starting Celery worker..."
 celery -A config worker -l info -Q default,campaigns,scoring &
