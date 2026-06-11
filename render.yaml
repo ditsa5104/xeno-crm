@@ -24,7 +24,6 @@ services:
     runtime: python
     plan: free
     rootDir: crm
-    pythonVersion: "3.11"
     buildCommand: pip install -r requirements.txt && python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py collectstatic --noinput
     startCommand: bash start.sh
     healthCheckPath: /admin/login/
@@ -69,7 +68,6 @@ services:
     runtime: python
     plan: free
     rootDir: channel_stub
-    pythonVersion: "3.11"
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     autoDeploy: true
