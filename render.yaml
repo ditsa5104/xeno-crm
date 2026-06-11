@@ -1,7 +1,7 @@
-# Render Blueprint — provisions the entire Xeno backend.
-# Deploy: push to GitHub, then on Render → New → Blueprint → pick this repo.
-# Set OPENROUTER_API_KEY (and any other `sync: false` vars) in the Render dashboard
-# after the first apply.
+# Render Blueprint — free-tier compatible.
+# Private services and background workers are not available on free tier.
+# Celery worker + beat run inside the CRM web dyno via start.sh.
+# Channel stub runs as a public web service.
 
 databases:
   - name: xeno-postgres
@@ -15,17 +15,17 @@ services:
   - type: redis
     name: xeno-redis
     plan: free
-    ipAllowList: []  # internal access only
+    ipAllowList: []
     maxmemoryPolicy: allkeys-lru
 
-  # ── CRM web (Django ASGI via daphne) ───────────────────────────────────
+  # ── CRM web + Celery worker + beat (all-in-one for free tier) ──────────
   - type: web
     name: xeno-crm
     runtime: python
     plan: free
     rootDir: crm
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
-    startCommand: daphne -b 0.0.0.0 -p $PORT config.asgi:application
+    startCommand: bash start.sh
     healthCheckPath: /admin/login/
     autoDeploy: true
     envVars:
@@ -38,9 +38,9 @@ services:
       - key: ALLOWED_HOSTS
         value: ".onrender.com"
       - key: SITE_URL
-        sync: false  # set to https://<crm-service>.onrender.com after first deploy
+        sync: false  # set to https://xeno-crm.onrender.com after first deploy
       - key: CORS_ALLOWED_ORIGINS
-        sync: false  # set to your Vercel frontend URL, e.g. https://xeno.vercel.app
+        sync: false  # set to your Vercel frontend URL e.g. https://xeno.vercel.app
       - key: DATABASE_URL
         fromDatabase:
           name: xeno-postgres
@@ -52,9 +52,9 @@ services:
           property: connectionString
       - key: CHANNEL_STUB_URL
         fromService:
-          type: pserv
+          type: web
           name: xeno-channel-stub
-          property: hostport
+          property: host
       - key: CHANNEL_STUB_SECRET
         generateValue: true
       - key: OPENROUTER_API_KEY
@@ -62,86 +62,8 @@ services:
       - key: OPENROUTER_MODEL
         value: anthropic/claude-sonnet-4-5
 
-  # ── Celery worker ──────────────────────────────────────────────────────
-  - type: worker
-    name: xeno-worker
-    runtime: python
-    plan: free
-    rootDir: crm
-    buildCommand: pip install -r requirements.txt
-    startCommand: celery -A config worker -l info -Q default,campaigns,scoring
-    autoDeploy: true
-    envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.production
-      - key: SECRET_KEY
-        fromService:
-          type: web
-          name: xeno-crm
-          envVarKey: SECRET_KEY
-      - key: DEBUG
-        value: "False"
-      - key: ALLOWED_HOSTS
-        value: ".onrender.com"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: xeno-postgres
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: xeno-redis
-          property: connectionString
-      - key: SITE_URL
-        sync: false
-      - key: CHANNEL_STUB_URL
-        fromService:
-          type: pserv
-          name: xeno-channel-stub
-          property: hostport
-      - key: CHANNEL_STUB_SECRET
-        fromService:
-          type: web
-          name: xeno-crm
-          envVarKey: CHANNEL_STUB_SECRET
-      - key: OPENROUTER_API_KEY
-        sync: false
-      - key: OPENROUTER_MODEL
-        value: anthropic/claude-sonnet-4-5
-
-  # ── Celery beat ────────────────────────────────────────────────────────
-  - type: worker
-    name: xeno-beat
-    runtime: python
-    plan: free
-    rootDir: crm
-    buildCommand: pip install -r requirements.txt
-    startCommand: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    autoDeploy: true
-    envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.production
-      - key: SECRET_KEY
-        fromService:
-          type: web
-          name: xeno-crm
-          envVarKey: SECRET_KEY
-      - key: DEBUG
-        value: "False"
-      - key: ALLOWED_HOSTS
-        value: ".onrender.com"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: xeno-postgres
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: xeno-redis
-          property: connectionString
-
-  # ── Channel stub (private service — only the CRM calls it) ────────────
-  - type: pserv
+  # ── Channel stub (public web service — free tier compatible) ───────────
+  - type: web
     name: xeno-channel-stub
     runtime: python
     plan: free
@@ -156,4 +78,4 @@ services:
           name: xeno-crm
           envVarKey: CHANNEL_STUB_SECRET
       - key: CRM_WEBHOOK_URL
-        sync: false  # set to https://<crm-service>.onrender.com/api/v1/webhooks/channel-event/
+        sync: false  # set to https://xeno-crm.onrender.com/api/v1/webhooks/channel-event/
