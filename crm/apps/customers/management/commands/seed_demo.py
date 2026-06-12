@@ -73,6 +73,13 @@ class Command(BaseCommand):
             Segment.objects.all().delete()
             Order.objects.all().delete()
             Customer.objects.all().delete()
+        elif Customer.objects.exists():
+            # Idempotency guard: don't re-seed (and double-insert logs) if data
+            # is already present. Use --fresh to force a clean reseed.
+            self.stdout.write(self.style.WARNING(
+                'Customers already exist; skipping seed. Use --fresh to reseed.'
+            ))
+            return
 
         self.stdout.write('Creating superuser...')
         if not User.objects.filter(username='admin').exists():
