@@ -145,9 +145,14 @@ SPECTACULAR_SETTINGS = {
         'docExpansion': 'list',
         'filter': True,
     },
-    'SERVERS': [
-        {'url': 'http://localhost:8000', 'description': 'Local development'},
-    ],
+    # If API_SERVER_URL is set (e.g. the Render URL), advertise it explicitly.
+    # Otherwise leave SERVERS empty so drf-spectacular infers the server from
+    # the request origin — correct for both local dev and production.
+    'SERVERS': (
+        [{'url': env('API_SERVER_URL'), 'description': 'API server'}]
+        if env('API_SERVER_URL', default='')
+        else []
+    ),
 }
 
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:5173'])
