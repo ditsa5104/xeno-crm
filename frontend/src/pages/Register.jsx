@@ -1,0 +1,125 @@
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Sparkles, Loader2, User, Mail, Lock, AtSign } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext.jsx'
+
+export default function Register() {
+  const nav = useNavigate()
+  const { register } = useAuth()
+  const [form, setForm] = useState({ name: '', username: '', email: '', password: '' })
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+
+  async function submit(e) {
+    e.preventDefault()
+    setBusy(true); setErr('')
+    try {
+      await register(form)
+      nav('/', { replace: true })
+    } catch (e) {
+      const body = e.body || {}
+      const msg = body.username?.[0] || body.email?.[0] || body.password?.[0] || body.detail || 'Registration failed'
+      setErr(msg)
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50">
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white">
+        <div className="flex items-center gap-2 text-xl font-semibold">
+          <Sparkles className="w-6 h-6" /> Xeno
+        </div>
+        <div>
+          <h1 className="text-4xl font-bold leading-tight">Marketing intelligence, on autopilot.</h1>
+          <p className="mt-4 text-white/80 max-w-md">
+            Build segments, draft messages, and launch campaigns — all from a chat with your data.
+          </p>
+          <ul className="mt-8 space-y-2 text-sm text-white/85">
+            <li>• Plain-English customer segmentation</li>
+            <li>• Multi-channel dispatch with smart retries</li>
+            <li>• Real-time delivery and conversion tracking</li>
+          </ul>
+        </div>
+        <div className="text-xs text-white/60">© Xeno · Privacy first. Always.</div>
+      </div>
+
+      <div className="flex items-center justify-center p-6">
+        <form onSubmit={submit} className="w-full max-w-sm space-y-5">
+          <div className="lg:hidden flex items-center gap-2 text-2xl font-bold text-slate-900">
+            <Sparkles className="w-6 h-6 text-indigo-600" /> Xeno
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Create your account</h2>
+            <p className="text-sm text-slate-500 mt-1">Free to get started — no credit card.</p>
+          </div>
+
+          {err && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{err}</div>}
+
+          <Field icon={<User className="w-4 h-4" />} label="Full name">
+            <input
+              autoFocus
+              className="w-full bg-transparent outline-none text-sm"
+              placeholder="Alex Patel"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </Field>
+          <Field icon={<AtSign className="w-4 h-4" />} label="Username">
+            <input
+              className="w-full bg-transparent outline-none text-sm"
+              placeholder="alexp"
+              value={form.username}
+              onChange={(e) => setForm({ ...form, username: e.target.value })}
+              required minLength={3}
+            />
+          </Field>
+          <Field icon={<Mail className="w-4 h-4" />} label="Email">
+            <input
+              type="email"
+              className="w-full bg-transparent outline-none text-sm"
+              placeholder="alex@brand.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+            />
+          </Field>
+          <Field icon={<Lock className="w-4 h-4" />} label="Password">
+            <input
+              type="password"
+              className="w-full bg-transparent outline-none text-sm"
+              placeholder="At least 6 characters"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required minLength={6}
+            />
+          </Field>
+
+          <button
+            disabled={busy}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 text-white text-sm font-medium py-2.5 hover:bg-slate-800 disabled:opacity-60"
+          >
+            {busy && <Loader2 className="w-4 h-4 animate-spin" />}
+            Create account
+          </button>
+
+          <div className="text-sm text-slate-500 text-center">
+            Already have an account?{' '}
+            <Link to="/login" className="text-indigo-600 font-medium hover:underline">Sign in</Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function Field({ icon, label, children }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-medium text-slate-600 mb-1 block">{label}</span>
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition">
+        <span className="text-slate-400">{icon}</span>
+        {children}
+      </div>
+    </label>
+  )
+}

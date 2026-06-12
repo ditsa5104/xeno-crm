@@ -29,9 +29,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'channels',
     'corsheaders',
+    'drf_spectacular',
     'django_celery_beat',
     'django_celery_results',
     'apps.core',
+    'apps.auth_app',
     'apps.customers',
     'apps.segments',
     'apps.campaigns',
@@ -112,6 +114,40 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.CrmPageNumberPagination',
     'PAGE_SIZE': 25,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Xeno CRM API',
+    'DESCRIPTION': (
+        'AI-native Mini CRM — REST API for customers, segments, campaigns, '
+        'analytics, copilot, and webhook ingestion.\n\n'
+        'Authenticate via `POST /api/v1/auth/login/` to receive a token, then send '
+        '`Authorization: Token <key>` on protected endpoints.'
+    ),
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': r'/api/v1',
+    'TAGS': [
+        {'name': 'auth', 'description': 'Register, login, logout, current user.'},
+        {'name': 'customers', 'description': 'Customer profiles, orders, timelines, CSV import/export.'},
+        {'name': 'segments', 'description': 'Filter-DSL segments and AI segment builder.'},
+        {'name': 'campaigns', 'description': 'Campaigns, dispatch, A/B, preflight, analytics.'},
+        {'name': 'campaign-templates', 'description': 'Reusable message templates.'},
+        {'name': 'analytics', 'description': 'Dashboard, cohort, channel performance.'},
+        {'name': 'copilot', 'description': 'AI copilot chat and agent endpoints.'},
+        {'name': 'webhooks', 'description': 'Channel-event ingestion (HMAC-signed).'},
+    ],
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+        'displayRequestDuration': True,
+        'docExpansion': 'list',
+        'filter': True,
+    },
+    'SERVERS': [
+        {'url': 'http://localhost:8000', 'description': 'Local development'},
+    ],
 }
 
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:5173'])

@@ -7,7 +7,9 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import serializers
 from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
@@ -57,6 +59,31 @@ def _maybe_smart_retry(log):
         dispatch_single_message.apply_async(args=[str(log.id)], countdown=3600)
 
 
+class _ChannelEventPayload(serializers.Serializer):
+    message_id = serializers.UUIDField(help_text='CommunicationLog UUID')
+    event_type = serializers.ChoiceField(choices=['sent', 'delivered', 'failed', 'opened', 'read', 'clicked'])
+    occurred_at = serializers.DateTimeField(required=False)
+    metadata = serializers.DictField(required=False)
+
+
+@extend_schema(
+    tags=['webhooks'],
+    summary='Channel-event ingestion',
+    description=(
+        'Called by the channel stub for every state change. Body must be JSON; '
+        'the request is HMAC-SHA256 signed via the `X-Xeno-Signature` header using '
+        'the shared `CHANNEL_STUB_SECRET`. Duplicate `(message_id, event_type)` pairs '
+        'are deduplicated for 24h via Redis.'
+    ),
+    request=_ChannelEventPayload,
+    parameters=[
+        OpenApiParameter(
+            name='X-Xeno-Signature', location=OpenApiParameter.HEADER, required=True, type=str,
+            description='HMAC-SHA256 of the raw request body, hex-encoded.',
+        ),
+    ],
+    responses={200: None, 401: None, 400: None, 404: None},
+)
 class ChannelEventWebhookView(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]

@@ -29,6 +29,9 @@ Open:
 
 - Frontend → http://localhost:5173
 - Django admin → http://localhost:8000/admin (admin / admin123)
+- API docs (Swagger UI) → http://localhost:8000/api/docs/
+- API docs (ReDoc) → http://localhost:8000/api/redoc/
+- OpenAPI schema → http://localhost:8000/api/schema/
 - Channel stub health → http://localhost:8001/health
 - Channel stub metrics → http://localhost:8001/metrics
 
