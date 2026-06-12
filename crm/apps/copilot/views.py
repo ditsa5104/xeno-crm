@@ -64,8 +64,9 @@ class CopilotAgentView(APIView):
     @extend_schema(
         summary='Run the Copilot in agent mode',
         description=(
-            'Give the agent a goal; it autonomously counts the audience, drafts a segment, '
-            'writes message variants, and creates a draft campaign — never launching it.'
+            'Give the agent a goal; it autonomously selects or drafts a segment, '
+            'writes message variants, and creates a draft campaign. It will not launch '
+            'until you explicitly confirm in a follow-up chat turn.'
         ),
         request=CopilotAgentRequest,
         responses={200: _CopilotResponse},

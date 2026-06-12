@@ -70,7 +70,7 @@ class CopilotAgent:
                         except Exception as e:
                             logger.exception("Tool %s failed", name)
                             result = {'error': str(e)}
-                    if name in ('create_segment_draft', 'create_campaign_draft'):
+                    if name in ('create_segment_draft', 'create_campaign_draft', 'launch_campaign'):
                         created[name] = result
                     current.append({
                         'role': 'tool',

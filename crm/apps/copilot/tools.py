@@ -59,6 +59,69 @@ COPILOT_TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "list_segments",
+            "description": "List existing segments with their id, name, description and customer_count. Use this to find a segment to attach a campaign to, or to answer questions about available segments.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "search": {"type": "string", "description": "Optional case-insensitive name filter."},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "preview_segment",
+            "description": "Preview a segment by its id: returns the matching customer count and a sample of members. Use to inspect who is in a segment before launching.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "segment_id": {"type": "string"},
+                    "sample_size": {"type": "integer", "default": 10},
+                },
+                "required": ["segment_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_customers",
+            "description": "Search/list customers by a free-text query matching name, email, phone, or city. Returns matching customers with key fields.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "limit": {"type": "integer", "default": 10},
+                },
+                "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_customer_timeline",
+            "description": "Get a customer's recent orders and communication history by id, email, phone, or name.",
+            "parameters": {
+                "type": "object",
+                "properties": {"customer_identifier": {"type": "string"}},
+                "required": ["customer_identifier"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_cohort_analysis",
+            "description": "Customers and total spend grouped by acquisition month.",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "list_top_customers",
             "description": "List the top N customers ranked by a metric such as total spend, total orders, or LTV estimate. Use this to answer questions like 'show me my top customers by spend'.",
             "parameters": {
@@ -136,6 +199,18 @@ COPILOT_TOOLS = [
                     "scheduled_at": {"type": "string"},
                 },
                 "required": ["name", "segment_id", "channel", "message_template"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "launch_campaign",
+            "description": "Launch (send) a campaign that is currently in draft/scheduled/paused status. This sends real messages to the audience, so only call it after the user has explicitly confirmed they want to launch.",
+            "parameters": {
+                "type": "object",
+                "properties": {"campaign_identifier": {"type": "string", "description": "Campaign UUID or name."}},
+                "required": ["campaign_identifier"],
             },
         },
     },
@@ -228,6 +303,113 @@ def list_top_campaigns(metric, n=5, period_days=30, **_):
 def get_channel_performance(**_):
     from apps.analytics.aggregators import channel_performance
     return {'channels': channel_performance()}
+
+
+def get_cohort_analysis(**_):
+    from apps.analytics.aggregators import cohort_analysis
+    return {'cohorts': cohort_analysis()}
+
+
+def list_segments(search=None, **_):
+    qs = Segment.objects.all()
+    if search:
+        qs = qs.filter(name__icontains=search)
+    return {
+        'segments': [
+            {
+                'id': str(s.id),
+                'name': s.name,
+                'description': s.description,
+                'customer_count': s.customer_count,
+                'segment_type': s.segment_type,
+            }
+            for s in qs[:50]
+        ]
+    }
+
+
+def preview_segment(segment_id, sample_size=10, **_):
+    try:
+        seg = Segment.objects.get(id=segment_id)
+    except (Segment.DoesNotExist, ValueError):
+        return {'error': f'Segment {segment_id} not found'}
+    try:
+        qs = SegmentEvaluator().evaluate(seg.filter_tree)
+    except ValueError as e:
+        return {'error': str(e)}
+    try:
+        sample_size = max(1, min(int(sample_size), 50))
+    except (TypeError, ValueError):
+        sample_size = 10
+    sample = qs[:sample_size]
+    return {
+        'segment_id': str(seg.id),
+        'name': seg.name,
+        'count': qs.count(),
+        'sample': [
+            {'id': str(c.id), 'name': c.name, 'city': c.city,
+             'total_spend': float(c.total_spend), 'rfm_tier': c.rfm_tier}
+            for c in sample
+        ],
+    }
+
+
+def search_customers(query, limit=10, **_):
+    try:
+        limit = max(1, min(int(limit), 50))
+    except (TypeError, ValueError):
+        limit = 10
+    qs = Customer.objects.filter(
+        Q(name__icontains=query) | Q(email__icontains=query)
+        | Q(phone__icontains=query) | Q(city__icontains=query)
+    )[:limit]
+    return {
+        'query': query,
+        'customers': [
+            {
+                'id': str(c.id),
+                'name': c.name,
+                'email': c.email,
+                'phone': c.phone,
+                'city': c.city,
+                'total_spend': float(c.total_spend),
+                'total_orders': c.total_orders,
+                'rfm_tier': c.rfm_tier,
+            }
+            for c in qs
+        ],
+    }
+
+
+def get_customer_timeline(customer_identifier, **_):
+    c = _resolve_customer(customer_identifier)
+    if not c:
+        return {'error': f'Customer "{customer_identifier}" not found'}
+    orders = c.orders.order_by('-ordered_at')[:20]
+    logs = CommunicationLog.objects.filter(customer=c).select_related('campaign').order_by('-queued_at')[:20]
+    return {
+        'customer': {'id': str(c.id), 'name': c.name, 'email': c.email},
+        'orders': [
+            {
+                'order_number': o.order_number,
+                'total_amount': float(o.total_amount),
+                'status': o.status,
+                'product_category': o.product_category,
+                'ordered_at': o.ordered_at.isoformat() if o.ordered_at else None,
+            }
+            for o in orders
+        ],
+        'communications': [
+            {
+                'campaign': l.campaign.name,
+                'channel': l.channel,
+                'status': l.status,
+                'queued_at': l.queued_at.isoformat() if l.queued_at else None,
+                'converted': l.converted,
+            }
+            for l in logs
+        ],
+    }
 
 
 def list_top_customers(metric='total_spend', n=10, **_):
@@ -325,6 +507,19 @@ def create_campaign_draft(name, segment_id, channel, message_template, send_mode
     return {'campaign_id': str(c.id), 'name': c.name, 'status': c.status}
 
 
+def launch_campaign(campaign_identifier, **_):
+    c = _resolve_campaign(campaign_identifier)
+    if not c:
+        return {'error': f'Campaign "{campaign_identifier}" not found'}
+    if c.status not in ('draft', 'scheduled', 'paused'):
+        return {'error': f'Cannot launch campaign in status "{c.status}".'}
+    from apps.campaigns.tasks import launch_campaign as launch_task
+    launch_task.delay(str(c.id))
+    c.status = 'scheduled'
+    c.save(update_fields=['status'])
+    return {'campaign_id': str(c.id), 'name': c.name, 'status': c.status, 'message': 'Launch queued.'}
+
+
 def get_customer_summary(customer_identifier, **_):
     c = _resolve_customer(customer_identifier)
     if not c:
@@ -353,9 +548,15 @@ TOOL_IMPL = {
     'list_top_campaigns': list_top_campaigns,
     'list_top_customers': list_top_customers,
     'get_channel_performance': get_channel_performance,
+    'get_cohort_analysis': get_cohort_analysis,
     'get_dashboard_summary': get_dashboard_summary,
+    'list_segments': list_segments,
+    'preview_segment': preview_segment,
+    'search_customers': search_customers,
+    'get_customer_timeline': get_customer_timeline,
     'create_segment_draft': create_segment_draft,
     'draft_campaign_messages': draft_campaign_messages,
     'create_campaign_draft': create_campaign_draft,
+    'launch_campaign': launch_campaign,
     'get_customer_summary': get_customer_summary,
 }
