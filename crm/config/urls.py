@@ -11,6 +11,7 @@ api_v1 = [
     path('segments/', include('apps.segments.urls')),
     path('campaigns/', include('apps.campaigns.urls')),
     path('campaign-templates/', include(('apps.campaigns.urls_templates', 'campaign_templates'))),
+    path('communication-logs/', include(('apps.campaigns.urls_logs', 'communication_logs'))),
     path('analytics/', include('apps.analytics.urls')),
     path('copilot/', include('apps.copilot.urls')),
     path('webhooks/', include('apps.webhooks.urls')),

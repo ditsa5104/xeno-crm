@@ -119,6 +119,16 @@ class CommunicationLogViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CommunicationLogSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        campaign_id = self.request.query_params.get('campaign')
+        if campaign_id:
+            qs = qs.filter(campaign_id=campaign_id)
+        log_status = self.request.query_params.get('status')
+        if log_status:
+            qs = qs.filter(status=log_status)
+        return qs.order_by('-queued_at')
+
 
 class CampaignTemplateViewSet(viewsets.ModelViewSet):
     queryset = CampaignTemplate.objects.all()

@@ -21,8 +21,15 @@ def launch_campaign(self, campaign_id):
 def dispatch_single_message(self, log_id):
     """Retry a single failed CommunicationLog by creating a new one."""
     try:
-        old = CommunicationLog.objects.get(id=log_id)
+        old = CommunicationLog.objects.select_related('campaign').get(id=log_id)
     except CommunicationLog.DoesNotExist:
+        return None
+    # Don't resurrect sends for a campaign that is no longer actively running.
+    if old.campaign.status not in ('running', 'scheduled'):
+        logger.info(
+            "Skipping retry for log %s; campaign %s status=%s.",
+            log_id, old.campaign_id, old.campaign.status,
+        )
         return None
     new = CommunicationLog.objects.create(
         campaign=old.campaign,

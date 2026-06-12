@@ -39,7 +39,21 @@ class CampaignDispatcher:
         self.campaign.save(update_fields=['status', 'launched_at', 'stat_total'])
 
         sent = 0
-        for customer in customers:
+        for i, customer in enumerate(customers):
+            # Honour a pause/stop requested mid-send. Re-read status periodically
+            # rather than every iteration to limit extra queries on large audiences.
+            if i % 50 == 0:
+                current_status = (
+                    Campaign.objects.filter(pk=self.campaign.pk)
+                    .values_list('status', flat=True)
+                    .first()
+                )
+                if current_status != 'running':
+                    logger.info(
+                        "Campaign %s no longer running (status=%s); halting dispatch after %d sends.",
+                        self.campaign.pk, current_status, sent,
+                    )
+                    return sent
             label, template = self._pick_variant()
             channel = self._resolve_channel(customer)
             body = render(template, customer)
