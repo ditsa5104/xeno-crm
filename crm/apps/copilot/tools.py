@@ -8,7 +8,7 @@ from apps.core.ai_client import get_ai_client, get_model
 from apps.customers.models import Customer
 from apps.segments.models import Segment
 from apps.segments.evaluator import SegmentEvaluator
-from apps.segments.ai_segmenter import nl_to_filter_tree
+from apps.segments.ai_segmenter import nl_to_filter_tree, SegmenterError
 from apps.campaigns.models import Campaign, CommunicationLog
 from .prompts import MESSAGE_DRAFTER_SYSTEM_PROMPT
 
@@ -180,7 +180,10 @@ def get_campaign_stats(campaign_identifier, **_):
 
 
 def count_customers_by_filter(description, **_):
-    tree = nl_to_filter_tree(description)
+    try:
+        tree = nl_to_filter_tree(description)
+    except SegmenterError as e:
+        return {'error': str(e)}
     try:
         qs = SegmentEvaluator().evaluate(tree)
         return {'count': qs.count(), 'filter_tree': tree}
@@ -219,7 +222,10 @@ def get_dashboard_summary(**_):
 
 
 def create_segment_draft(name, nl_filter, description='', **_):
-    tree = nl_to_filter_tree(nl_filter)
+    try:
+        tree = nl_to_filter_tree(nl_filter)
+    except SegmenterError as e:
+        return {'error': str(e)}
     seg = Segment.objects.create(
         name=name, description=description, segment_type='dynamic',
         filter_tree=tree, natural_query=nl_filter, ai_generated=True,

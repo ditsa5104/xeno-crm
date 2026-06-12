@@ -173,3 +173,9 @@ SITE_URL = env('SITE_URL', default='http://localhost:8000')
 # Channel stub
 CHANNEL_STUB_URL = env('CHANNEL_STUB_URL', default='http://channel_stub:8001')
 CHANNEL_STUB_SECRET = env('CHANNEL_STUB_SECRET', default='dev-stub-secret')
+# URL the channel stub calls back to. Must be reachable from the stub container,
+# so it differs from SITE_URL (which may be localhost for browser-facing links).
+CRM_WEBHOOK_URL = env(
+    'CRM_WEBHOOK_URL',
+    default='http://crm:8000/api/v1/webhooks/channel-event/',
+)

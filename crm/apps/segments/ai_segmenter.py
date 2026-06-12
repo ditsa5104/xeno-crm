@@ -5,6 +5,11 @@ from apps.core.ai_client import get_ai_client, get_model
 
 logger = logging.getLogger(__name__)
 
+
+class SegmenterError(Exception):
+    """Raised when the AI segmenter cannot produce a valid filter tree."""
+
+
 AI_SEGMENTER_SYSTEM_PROMPT = """
 You convert plain-English customer filter descriptions into a structured JSON filter tree.
 
@@ -48,9 +53,11 @@ def nl_to_filter_tree(description: str) -> dict:
                 text = text.rsplit('```', 1)[0]
         return json.loads(text)
     except (APIError, RateLimitError) as e:
-        logger.warning("AI segmenter failed, returning trivial tree: %s", e)
-        # TRADEOFF: silent fallback to empty filter — at scale, surface error to user.
-        return {'operator': 'AND', 'conditions': []}
+        logger.warning("AI segmenter failed: %s", e)
+        # Surface the failure instead of silently returning an empty tree, which
+        # the evaluator treats as "match everyone" — a dangerous default for a
+        # campaign audience. Callers decide how to present this to the user.
+        raise SegmenterError("The AI segmenter is temporarily unavailable. Please try again.") from e
     except json.JSONDecodeError as e:
         logger.warning("AI segmenter returned invalid JSON: %s", e)
-        return {'operator': 'AND', 'conditions': []}
+        raise SegmenterError("The AI segmenter returned an unparseable response. Please rephrase and retry.") from e

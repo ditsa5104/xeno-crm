@@ -62,7 +62,7 @@ class CampaignDispatcher:
             log.failure_reason = 'no_contact'
             log.save(update_fields=['status', 'failure_reason'])
             return False
-        callback_url = f"{settings.SITE_URL.rstrip('/')}/api/v1/webhooks/channel-event/"
+        callback_url = settings.CRM_WEBHOOK_URL
         try:
             with httpx.Client(timeout=10.0) as client:
                 resp = client.post(

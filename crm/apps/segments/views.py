@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Segment, SegmentSnapshot
 from .serializers import SegmentSerializer, AIBuildSerializer
 from .evaluator import SegmentEvaluator
-from .ai_segmenter import nl_to_filter_tree
+from .ai_segmenter import nl_to_filter_tree, SegmenterError
 from apps.customers.serializers import CustomerListSerializer
 from apps.customers.models import Customer
 
@@ -41,7 +41,10 @@ class SegmentViewSet(viewsets.ModelViewSet):
         ser = AIBuildSerializer(data=request.data)
         ser.is_valid(raise_exception=True)
         nl = ser.validated_data['nl_filter']
-        tree = nl_to_filter_tree(nl)
+        try:
+            tree = nl_to_filter_tree(nl)
+        except SegmenterError as e:
+            return Response({'error': str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         seg = Segment.objects.create(
             name=ser.validated_data['name'],
             description=ser.validated_data.get('description', ''),
