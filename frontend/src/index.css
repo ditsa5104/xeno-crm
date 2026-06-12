@@ -37,3 +37,28 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+/* Onboarding demo — gentle gradient pulse, no hard edges */
+@keyframes onboardingPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.5; }
+}
+.onboarding-pulse { animation: onboardingPulse 4s ease-in-out infinite; }
+
+@keyframes onboardingGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.onboarding-gradient-pulse {
+  background: linear-gradient(120deg, #818cf8, #c084fc, #f472b6, #818cf8);
+  background-size: 300% 300%;
+  animation: onboardingGradientShift 6s ease infinite;
+}
+
+/* Soft glowing ring for highlighted demo elements */
+.onboarding-highlight {
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.3);
+  border-radius: 16px;
+  transition: box-shadow 0.3s ease;
+}

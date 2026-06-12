@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route, NavLink, Link, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Layers, Megaphone, BarChart3, Upload,
-  Sparkles, LogOut, ChevronDown, BookOpen,
+  Sparkles, LogOut, ChevronDown, BookOpen, PlayCircle,
 } from 'lucide-react'
 import Dashboard from './pages/Dashboard.jsx'
 import Customers from './pages/Customers.jsx'
@@ -17,8 +17,10 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import CopilotSidebar from './components/CopilotSidebar.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import OnboardingDemo from './components/OnboardingDemo.jsx'
 import { useAuth } from './contexts/AuthContext.jsx'
 import { useCopilot } from './contexts/CopilotContext.jsx'
+import { useOnboarding } from './contexts/OnboardingContext.jsx'
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -32,6 +34,7 @@ const NAV = [
 function Shell() {
   const { user, logout } = useAuth()
   const { setOpen } = useCopilot()
+  const { start } = useOnboarding()
   const [menu, setMenu] = React.useState(false)
   const nav = useNavigate()
 
@@ -83,6 +86,12 @@ function Shell() {
           >
             <BookOpen className="w-4 h-4" /> API docs
           </a>
+          <button
+            onClick={start}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+          >
+            <PlayCircle className="w-4 h-4" /> Replay Demo
+          </button>
         </div>
 
         <div className="border-t border-slate-200 p-3 relative">
@@ -129,6 +138,7 @@ function Shell() {
       </main>
 
       <CopilotSidebar />
+      <OnboardingDemo />
     </div>
   )
 }
