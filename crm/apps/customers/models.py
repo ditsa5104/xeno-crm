@@ -29,6 +29,7 @@ class Customer(TimestampedModel):
     channel_preference = models.CharField(max_length=20, choices=CHANNEL_CHOICES, default='auto')
     city = models.CharField(max_length=100, blank=True, db_index=True)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default='unknown')
+    date_of_birth = models.DateField(null=True, blank=True, db_index=True)
     tags = ArrayField(models.CharField(max_length=50), default=list, blank=True)
 
     rfm_recency_score = models.IntegerField(default=0)
@@ -77,6 +78,7 @@ class Order(TimestampedModel):
     currency = models.CharField(max_length=3, default='INR')
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='placed')
     channel = models.CharField(max_length=20, choices=ORDER_CHANNEL_CHOICES, default='online')
+    product_category = models.CharField(max_length=100, blank=True, db_index=True)
     items = models.JSONField(default=list)
     ordered_at = models.DateTimeField(db_index=True)
 

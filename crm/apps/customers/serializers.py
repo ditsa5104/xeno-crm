@@ -7,7 +7,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             'id', 'order_number', 'total_amount', 'currency', 'status',
-            'channel', 'items', 'ordered_at', 'created_at',
+            'channel', 'product_category', 'items', 'ordered_at', 'created_at',
         ]
         read_only_fields = ['id', 'created_at']
 
@@ -19,7 +19,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = [
             'id', 'external_id', 'name', 'email', 'phone',
-            'channel_preference', 'city', 'gender', 'tags',
+            'channel_preference', 'city', 'gender', 'date_of_birth', 'tags',
             'rfm_recency_score', 'rfm_frequency_score', 'rfm_monetary_score',
             'rfm_composite', 'rfm_tier', 'churn_risk_score',
             'predicted_send_hour', 'ltv_estimate',

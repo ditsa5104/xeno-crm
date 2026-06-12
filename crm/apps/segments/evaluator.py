@@ -19,6 +19,8 @@ SUPPORTED_FIELDS = {
     'channel_preference': {'eq', 'in'},
     'tags': {'contains', 'contains_any'},
     'created_at': {'days_ago_gte', 'days_ago_lte'},
+    'birthday_month': {'eq', 'is_current_month'},
+    'purchased_category': {'eq', 'in'},
 }
 
 ORM_OP_SUFFIX = {
@@ -70,6 +72,19 @@ class SegmentEvaluator:
             if op == 'contains_any':
                 vals = value if isinstance(value, list) else [value]
                 return Q(tags__overlap=vals)
+
+        # Birthday month: match customers whose date_of_birth falls in a month.
+        if field == 'birthday_month':
+            month = timezone.now().month if op == 'is_current_month' else int(value)
+            return Q(date_of_birth__month=month)
+
+        # Customers who purchased an item in a given product category (last 12 months).
+        if field == 'purchased_category':
+            cutoff = timezone.now() - timedelta(days=365)
+            if op == 'in':
+                cats = value if isinstance(value, list) else [value]
+                return Q(orders__product_category__in=cats, orders__ordered_at__gte=cutoff)
+            return Q(orders__product_category=value, orders__ordered_at__gte=cutoff)
 
         suffix = ORM_OP_SUFFIX[op]
         return Q(**{f'{field}{suffix}': value})

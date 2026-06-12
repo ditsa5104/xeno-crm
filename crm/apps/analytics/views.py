@@ -20,6 +20,25 @@ class DashboardView(APIView):
 
 @extend_schema(
     tags=['analytics'],
+    summary='Dashboard overview',
+    description='Bundled dashboard payload: summary metrics, recent campaigns, '
+                'top segments, and a 30-day performance time series.',
+    responses={200: OpenApiResponse(description='Composite dashboard payload.')},
+)
+class OverviewView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        return Response({
+            'summary': aggregators.dashboard_summary(),
+            'recent_campaigns': aggregators.recent_campaigns(),
+            'top_segments': aggregators.top_segments(),
+            'performance': aggregators.performance_timeseries(),
+        })
+
+
+@extend_schema(
+    tags=['analytics'],
     summary='Cohort analysis',
     description='Customers and spend grouped by acquisition month.',
     responses={200: OpenApiResponse(description='List of {month, customers, spend}.')},
