@@ -8,6 +8,13 @@ app = Celery('xeno')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+# Free-tier memory guards (512MB dyno shared with daphne + beat):
+# - prefetch 1 task at a time so a single worker doesn't hold many in memory
+# - restart the child if it exceeds ~200MB RSS to reclaim leaked memory
+app.conf.worker_prefetch_multiplier = 1
+app.conf.worker_max_tasks_per_child = 100
+app.conf.worker_max_memory_per_child = 200_000  # KB (~200MB)
+
 app.conf.beat_schedule = {
     'recompute-rfm-scores': {
         'task': 'apps.customers.tasks.recompute_rfm_scores',
