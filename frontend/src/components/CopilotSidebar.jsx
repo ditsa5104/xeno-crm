@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Sparkles, X, Send, MessageSquare, Wand2 } from 'lucide-react'
 import { useCopilot } from '../contexts/CopilotContext.jsx'
+import Markdown from './Markdown.jsx'
 
 export default function CopilotSidebar() {
   const { isOpen, setOpen, mode, setMode, messages, busy, send } = useCopilot()
@@ -77,12 +78,12 @@ export default function CopilotSidebar() {
           )}
           {messages.map((m, i) => (
             <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-              <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm whitespace-pre-wrap ${
+              <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${
                 m.role === 'user'
-                  ? 'bg-slate-900 text-white rounded-br-sm'
+                  ? 'bg-slate-900 text-white rounded-br-sm whitespace-pre-wrap'
                   : 'bg-slate-100 text-slate-900 rounded-bl-sm'
               }`}>
-                {m.content}
+                {m.role === 'user' ? m.content : <Markdown content={m.content} />}
                 {m.meta?.tool_calls_made?.length > 0 && (
                   <div className="text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-slate-200/50">
                     🔧 {m.meta.tool_calls_made.join(' · ')}

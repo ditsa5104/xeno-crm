@@ -59,6 +59,20 @@ COPILOT_TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "list_top_customers",
+            "description": "List the top N customers ranked by a metric such as total spend, total orders, or LTV estimate. Use this to answer questions like 'show me my top customers by spend'.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "metric": {"type": "string", "enum": ["total_spend", "total_orders", "ltv_estimate"], "default": "total_spend"},
+                    "n": {"type": "integer", "default": 10},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_channel_performance",
             "description": "Aggregated metrics broken down by channel.",
             "parameters": {"type": "object", "properties": {}},
@@ -216,6 +230,33 @@ def get_channel_performance(**_):
     return {'channels': channel_performance()}
 
 
+def list_top_customers(metric='total_spend', n=10, **_):
+    allowed = {'total_spend', 'total_orders', 'ltv_estimate'}
+    if metric not in allowed:
+        metric = 'total_spend'
+    try:
+        n = max(1, min(int(n), 50))
+    except (TypeError, ValueError):
+        n = 10
+    rows = Customer.objects.order_by(f'-{metric}')[:n]
+    return {
+        'metric': metric,
+        'customers': [
+            {
+                'id': str(c.id),
+                'name': c.name,
+                'email': c.email,
+                'city': c.city,
+                'total_spend': float(c.total_spend),
+                'total_orders': c.total_orders,
+                'ltv_estimate': float(c.ltv_estimate),
+                'rfm_tier': c.rfm_tier,
+            }
+            for c in rows
+        ],
+    }
+
+
 def get_dashboard_summary(**_):
     from apps.analytics.aggregators import dashboard_summary
     return dashboard_summary()
@@ -310,6 +351,7 @@ TOOL_IMPL = {
     'get_campaign_stats': get_campaign_stats,
     'count_customers_by_filter': count_customers_by_filter,
     'list_top_campaigns': list_top_campaigns,
+    'list_top_customers': list_top_customers,
     'get_channel_performance': get_channel_performance,
     'get_dashboard_summary': get_dashboard_summary,
     'create_segment_draft': create_segment_draft,
