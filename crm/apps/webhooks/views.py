@@ -120,11 +120,19 @@ class ChannelEventWebhookView(APIView):
             except CommunicationLog.DoesNotExist:
                 return Response({'error': 'log not found'}, status=404)
 
+            was_failed = log.status == 'failed'
             applied = CommunicationStateMachine.apply(log, event_type, occurred_at, metadata)
             if not applied:
                 return Response({'status': 'ignored'}, status=200)
 
             log.save()
+
+            # If a real engagement event arrived after a (stale, reordered) failure,
+            # the state machine clears the failed status — undo the earlier failed count.
+            if was_failed and log.status != 'failed':
+                Campaign.objects.filter(id=log.campaign_id, stat_failed__gt=0).update(
+                    stat_failed=F('stat_failed') - 1
+                )
 
             try:
                 CommunicationEvent.objects.create(
