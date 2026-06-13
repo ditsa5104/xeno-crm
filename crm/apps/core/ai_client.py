@@ -1,7 +1,7 @@
 from openai import OpenAI
 from django.conf import settings
 
-DEFAULT_MODEL = "anthropic/claude-sonnet-4-5"
+DEFAULT_MODEL = "deepseek/deepseek-v3.2"
 
 
 def get_ai_client() -> OpenAI:

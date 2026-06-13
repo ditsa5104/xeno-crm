@@ -7,7 +7,7 @@ Two-service AI-native CRM for consumer brands. Marketers can segment customers, 
 - **CRM** — Django 4.2 + DRF + Channels 4 + Celery 5 + PostgreSQL 16 + Redis
 - **Channel stub** — FastAPI async simulator with HMAC-signed callbacks
 - **Frontend** — React 18 + Vite + TanStack Query + Recharts + Tailwind
-- **AI** — OpenRouter via the `openai` SDK (model: `anthropic/claude-sonnet-4-5` by default)
+- **AI** — OpenRouter via the `openai` SDK (model: `deepseek/deepseek-v3.2` by default)
 
 ## Quick start
 

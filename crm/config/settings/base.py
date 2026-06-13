@@ -172,7 +172,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AI / OpenRouter
 OPENROUTER_API_KEY = env('OPENROUTER_API_KEY', default='')
-OPENROUTER_MODEL = env('OPENROUTER_MODEL', default='anthropic/claude-sonnet-4-5')
+OPENROUTER_MODEL = env('OPENROUTER_MODEL', default='deepseek/deepseek-v3.2')
 SITE_URL = env('SITE_URL', default='http://localhost:8000')
 
 # Channel stub

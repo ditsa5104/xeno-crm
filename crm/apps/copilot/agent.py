@@ -38,10 +38,12 @@ class CopilotAgent:
                     'created_objects': created,
                 }
 
-            choice = resp.choices[0]
-            msg = choice.message
+            msg = resp.choices[0].message
 
-            if choice.finish_reason == 'tool_calls' and msg.tool_calls:
+            # Detect tool calls by presence rather than finish_reason: some models
+            # (e.g. DeepSeek) attach tool_calls while reporting finish_reason='stop',
+            # which would otherwise be misread as a final answer.
+            if msg.tool_calls:
                 current.append({
                     'role': 'assistant',
                     'content': msg.content or '',
@@ -85,8 +87,32 @@ class CopilotAgent:
                 'created_objects': created,
             }
 
+        # Tool budget exhausted: make one final call WITHOUT tools so the model is
+        # forced to synthesise a text answer from the data it has already gathered,
+        # instead of dead-ending with a placeholder message.
+        try:
+            final = client.chat.completions.create(
+                model=model,
+                max_tokens=1024,
+                messages=(
+                    [{'role': 'system', 'content': system}]
+                    + current
+                    + [{
+                        'role': 'user',
+                        'content': (
+                            'Summarise your findings and answer my original request now '
+                            'using the information already gathered. Do not call any more tools.'
+                        ),
+                    }]
+                ),
+            )
+            text = final.choices[0].message.content or ''
+        except (APIError, RateLimitError) as e:
+            logger.exception("Copilot final summarisation call failed")
+            text = ''
+
         return {
-            'response_text': "Stopped after maximum tool rounds.",
+            'response_text': text or "I gathered some data but couldn't finish composing a response. Please try rephrasing your request.",
             'tool_calls_made': calls_made,
             'created_objects': created,
         }
