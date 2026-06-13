@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { Search, Users } from 'lucide-react'
+import { Search, Users, Phone } from 'lucide-react'
 import { api } from '../api/client.js'
 import RFMBadge from '../components/RFMBadge.jsx'
 import PageHeader from '../components/PageHeader.jsx'
 import { SkeletonRow } from '../components/Skeleton.jsx'
 import EmptyState from '../components/EmptyState.jsx'
+import InsightPanel from '../components/InsightPanel.jsx'
 
 export default function Customers() {
   const [q, setQ] = useState('')
+  const [insight, setInsight] = useState(false)
   const { data, isLoading } = useQuery({
     queryKey: ['customers', q],
     queryFn: () => api.get(`/api/v1/customers/?search=${encodeURIComponent(q)}`),
@@ -23,18 +25,30 @@ export default function Customers() {
         title="Customers"
         subtitle={data ? `${data.count} total` : undefined}
         actions={
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              className="input pl-9 w-64"
-              placeholder="Search by name, email, city…"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-            />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setInsight(true)} className="btn-gradient whitespace-nowrap">
+              <Phone className="w-4 h-4" /> Who do I talk to today?
+            </button>
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                className="input pl-9 w-64"
+                placeholder="Search by name, email, city…"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+              />
+            </div>
           </div>
         }
       />
 
+      {insight && (
+        <InsightPanel
+          insightKey="who_to_contact_today"
+          title="Who do I talk to today?"
+          onClose={() => setInsight(false)}
+        />
+      )}
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">

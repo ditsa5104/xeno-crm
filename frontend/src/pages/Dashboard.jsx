@@ -9,6 +9,7 @@ import { Users, Send, CheckCircle2, MailOpen, IndianRupee } from 'lucide-react'
 import LiveEventFeed from '../components/LiveEventFeed.jsx'
 import PageHeader from '../components/PageHeader.jsx'
 import { CardSkeleton } from '../components/Skeleton.jsx'
+import AIActions from '../components/AIActions.jsx'
 import { useAuth } from '../contexts/AuthContext.jsx'
 
 const CHANNEL_COLOR = {
@@ -91,6 +92,11 @@ export default function Dashboard() {
             <MetricCard label="Revenue Attributed" value={inr(s.total_revenue_attributed)} tone="revenue" icon={IndianRupee} />
           </>
         )}
+      </div>
+
+      {/* AI actions — one-tap, data-grounded next steps */}
+      <div className="mt-6">
+        <AIActions />
       </div>
 
       {/* Main grid: recent campaigns + top segments */}
