@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f7f6fb;
-  --brand: #7c3aed;
+  --bg: #0e1018;
+  --brand: #8b5cf6;
 }
 
 html, body, #root { height: 100%; }
@@ -17,21 +17,22 @@ body {
   letter-spacing: -0.011em;
 }
 
-/* Ambient page background: very light lavender canvas with soft aurora blobs. */
+/* Ambient page background: deep slate canvas with soft aurora blobs.
+   Content cards stay bright and pop against this dim frame. */
 body {
   background-color: var(--bg);
   background-image:
-    radial-gradient(60rem 60rem at 110% -10%, rgba(124, 58, 237, 0.07), transparent 55%),
-    radial-gradient(50rem 50rem at -10% 0%, rgba(236, 72, 153, 0.05), transparent 50%),
-    radial-gradient(45rem 45rem at 50% 120%, rgba(99, 102, 241, 0.05), transparent 55%);
+    radial-gradient(60rem 60rem at 110% -10%, rgba(124, 58, 237, 0.18), transparent 55%),
+    radial-gradient(50rem 50rem at -10% 0%, rgba(236, 72, 153, 0.12), transparent 50%),
+    radial-gradient(45rem 45rem at 50% 120%, rgba(99, 102, 241, 0.12), transparent 55%);
   background-attachment: fixed;
 }
 
-::selection { background: rgba(124, 58, 237, 0.18); }
+::selection { background: rgba(139, 92, 246, 0.32); }
 
 *::-webkit-scrollbar { width: 9px; height: 9px; }
-*::-webkit-scrollbar-thumb { background: #d6d3e0; border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
-*::-webkit-scrollbar-thumb:hover { background: #b8b3c9; background-clip: content-box; }
+*::-webkit-scrollbar-thumb { background: #2c2f3d; border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: #3c4050; background-clip: content-box; }
 *::-webkit-scrollbar-track { background: transparent; }
 
 @layer components {

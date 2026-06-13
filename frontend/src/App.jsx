@@ -40,17 +40,17 @@ function Shell() {
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 shrink-0 flex flex-col sticky top-0 h-screen border-r border-slate-200/70 bg-white/70 backdrop-blur-xl">
+      <aside className="w-64 shrink-0 flex flex-col sticky top-0 h-screen border-r border-white/5 bg-slate-950/60 backdrop-blur-xl">
         <Link to="/" className="px-5 py-5 flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 grid place-items-center text-white shadow-glow group-hover:scale-105 transition-transform">
             <Sparkles className="w-[18px] h-[18px]" />
           </div>
-          <span className="text-lg font-extrabold tracking-tight">Xeno</span>
-          <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-brand-500 bg-brand-50 px-1.5 py-0.5 rounded-md">CRM</span>
+          <span className="text-lg font-extrabold tracking-tight text-white">Xeno</span>
+          <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-brand-300 bg-brand-500/15 px-1.5 py-0.5 rounded-md">CRM</span>
         </Link>
 
         <nav className="px-3 space-y-0.5 flex-1 mt-1">
-          <div className="eyebrow px-3 mb-1.5">Workspace</div>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 px-3 mb-1.5">Workspace</div>
           {NAV.map((n) => {
             const Icon = n.icon
             return (
@@ -61,8 +61,8 @@ function Shell() {
                 className={({ isActive }) =>
                   `group relative flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-slate-900 text-white shadow-soft'
-                      : 'text-slate-500 hover:bg-slate-100/70 hover:text-slate-900'
+                      ? 'bg-white/10 text-white shadow-soft'
+                      : 'text-slate-400 hover:bg-white/5 hover:text-white'
                   }`
                 }
               >
@@ -71,7 +71,7 @@ function Shell() {
                     {isActive && (
                       <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-gradient-to-b from-indigo-400 to-pink-400" />
                     )}
-                    <Icon className={`w-[18px] h-[18px] transition-transform ${isActive ? '' : 'group-hover:scale-110'}`} />
+                    <Icon className={`w-[18px] h-[18px] transition-transform ${isActive ? 'text-brand-300' : 'group-hover:scale-110'}`} />
                     {n.label}
                   </>
                 )}
@@ -92,38 +92,38 @@ function Shell() {
               href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/docs/`}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition"
+              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-white/5 hover:text-white transition"
             >
               <BookOpen className="w-3.5 h-3.5" /> API
             </a>
             <button
               onClick={start}
-              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition"
+              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-white/5 hover:text-white transition"
             >
               <PlayCircle className="w-3.5 h-3.5" /> Demo
             </button>
           </div>
         </div>
 
-        <div className="border-t border-slate-200/70 p-3 relative">
+        <div className="border-t border-white/5 p-3 relative">
           <button
             onClick={() => setMenu((m) => !m)}
-            className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-slate-100/70 transition"
+            className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-white/5 transition"
           >
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 grid place-items-center text-white text-xs font-bold shadow-soft">
               {(user?.name || user?.username || 'U').slice(0, 1).toUpperCase()}
             </div>
             <div className="flex-1 text-left min-w-0">
-              <div className="text-sm font-semibold text-slate-900 truncate">{user?.name || user?.username}</div>
-              <div className="text-xs text-slate-400 truncate">{user?.email}</div>
+              <div className="text-sm font-semibold text-white truncate">{user?.name || user?.username}</div>
+              <div className="text-xs text-slate-500 truncate">{user?.email}</div>
             </div>
-            <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${menu ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${menu ? 'rotate-180' : ''}`} />
           </button>
           {menu && (
-            <div className="absolute bottom-16 left-3 right-3 bg-white border border-slate-200 rounded-xl shadow-lift overflow-hidden animate-scale-in origin-bottom">
+            <div className="absolute bottom-16 left-3 right-3 bg-slate-900 border border-white/10 rounded-xl shadow-lift overflow-hidden animate-scale-in origin-bottom">
               <button
                 onClick={async () => { await logout(); nav('/login') }}
-                className="w-full text-left px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2"
               >
                 <LogOut className="w-4 h-4" /> Sign out
               </button>
