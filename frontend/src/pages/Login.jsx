@@ -57,6 +57,10 @@ export default function Login() {
 
           {err && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{err}</div>}
 
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 px-3.5 py-3 text-xs text-indigo-900">
+            <span className="font-semibold">👋 Reviewer from Xeno?</span> Use the temp credentials below to see the CRM in action with mock data — username <code className="font-mono font-semibold">tempuser_check</code>, password <code className="font-mono font-semibold">TempPass#2026</code>.
+          </div>
+
           <Field icon={<Mail className="w-4 h-4" />} label="Username or email">
             <input
               autoFocus

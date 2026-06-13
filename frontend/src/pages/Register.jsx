@@ -58,6 +58,10 @@ export default function Register() {
 
           {err && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{err}</div>}
 
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 px-3.5 py-3 text-xs text-indigo-900">
+            <span className="font-semibold">👋 Reviewer from Xeno?</span> No need to sign up — <Link to="/login" className="font-semibold underline">sign in</Link> with the temp credentials (<code className="font-mono font-semibold">tempuser_check</code> / <code className="font-mono font-semibold">TempPass#2026</code>) to see the CRM in action with mock data.
+          </div>
+
           <Field icon={<User className="w-4 h-4" />} label="Full name">
             <input
               autoFocus
