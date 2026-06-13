@@ -20,17 +20,20 @@ export default function CopilotSidebar() {
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40" onClick={() => setOpen(false)} />
-      <div className="fixed top-0 right-0 h-full w-[420px] bg-white border-l border-slate-200 shadow-2xl flex flex-col z-50">
-        <div className="px-5 py-4 border-b border-slate-200 flex items-start justify-between">
+      <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-40 animate-fade-in" onClick={() => setOpen(false)} />
+      <div className="fixed top-0 right-0 h-full w-[440px] max-w-full bg-white border-l border-slate-200/70 shadow-lift flex flex-col z-50 animate-scale-in origin-right">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-transparent">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 grid place-items-center text-white">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 grid place-items-center text-white shadow-glow">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <div className="font-semibold">Xeno Copilot</div>
+              <div>
+                <div className="font-bold leading-none">Xeno Copilot</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Your marketing co-pilot</div>
+              </div>
             </div>
-            <div className="flex gap-1 mt-2.5 p-0.5 bg-slate-100 rounded-lg w-fit">
+            <div className="flex gap-1 mt-3 p-0.5 bg-slate-100 rounded-lg w-fit">
               {[
                 { id: 'chat', label: 'Chat', icon: MessageSquare },
                 { id: 'agent', label: 'Agent', icon: Wand2 },
@@ -39,8 +42,8 @@ export default function CopilotSidebar() {
                 return (
                   <button
                     key={m.id}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition ${
-                      mode === m.id ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      mode === m.id ? 'bg-white shadow-soft text-slate-900' : 'text-slate-500 hover:text-slate-700'
                     }`}
                     onClick={() => setMode(m.id)}
                   >
@@ -50,7 +53,7 @@ export default function CopilotSidebar() {
               })}
             </div>
           </div>
-          <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-700 p-1 rounded hover:bg-slate-100">
+          <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -68,25 +71,26 @@ export default function CopilotSidebar() {
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="text-left px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm text-slate-700 transition"
+                    className="group text-left px-3.5 py-2.5 rounded-xl border border-slate-200 hover:border-brand-300 hover:bg-brand-50/40 text-sm text-slate-700 transition-all hover:shadow-soft flex items-center justify-between"
                   >
-                    {s}
+                    <span>{s}</span>
+                    <span className="text-brand-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                   </button>
                 ))}
               </div>
             </div>
           )}
           {messages.map((m, i) => (
-            <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+            <div key={i} className={`animate-fade-up ${m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}`}>
               <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${
                 m.role === 'user'
-                  ? 'bg-slate-900 text-white rounded-br-sm whitespace-pre-wrap'
-                  : 'bg-slate-100 text-slate-900 rounded-bl-sm'
+                  ? 'bg-slate-900 text-white rounded-br-md shadow-soft whitespace-pre-wrap'
+                  : 'bg-slate-50 text-slate-900 rounded-bl-md ring-1 ring-slate-200/60'
               }`}>
                 {m.role === 'user' ? m.content : <Markdown content={m.content} />}
                 {m.meta?.tool_calls_made?.length > 0 && (
-                  <div className="text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-slate-200/50">
-                    🔧 {m.meta.tool_calls_made.join(' · ')}
+                  <div className="text-[10px] text-slate-400 mt-2 pt-2 border-t border-slate-200/60 flex items-center gap-1 flex-wrap">
+                    <span className="font-medium">🔧 tools:</span> {m.meta.tool_calls_made.join(' · ')}
                   </div>
                 )}
               </div>

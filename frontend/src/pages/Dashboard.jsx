@@ -5,6 +5,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts'
 import { api } from '../api/client.js'
+import { Users, Send, CheckCircle2, MailOpen, IndianRupee } from 'lucide-react'
 import LiveEventFeed from '../components/LiveEventFeed.jsx'
 import PageHeader from '../components/PageHeader.jsx'
 import { CardSkeleton } from '../components/Skeleton.jsx'
@@ -31,11 +32,27 @@ const pct = (v) => `${((v || 0) * 100).toFixed(1)}%`
 const inr = (v) =>
   '₹' + Number(v || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })
 
-function MetricCard({ label, value, bg }) {
+const METRIC_STYLES = {
+  customers: { bg: 'from-blue-50 to-white', ring: 'bg-blue-100/70 text-blue-600' },
+  campaigns: { bg: 'from-violet-50 to-white', ring: 'bg-violet-100/70 text-violet-600' },
+  delivered: { bg: 'from-emerald-50 to-white', ring: 'bg-emerald-100/70 text-emerald-600' },
+  open: { bg: 'from-amber-50 to-white', ring: 'bg-amber-100/70 text-amber-600' },
+  revenue: { bg: 'from-rose-50 to-white', ring: 'bg-rose-100/70 text-rose-600' },
+}
+
+function MetricCard({ label, value, tone = 'customers', icon: Icon }) {
+  const s = METRIC_STYLES[tone] || METRIC_STYLES.customers
   return (
-    <div className="rounded-2xl border border-slate-200 p-5" style={{ background: bg }}>
-      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="text-3xl font-bold mt-2 text-slate-900">{value}</div>
+    <div className={`rounded-2xl border border-slate-200/60 p-5 bg-gradient-to-br ${s.bg} shadow-card card-hover group`}>
+      <div className="flex items-center justify-between">
+        <div className="eyebrow">{label}</div>
+        {Icon && (
+          <div className={`w-8 h-8 rounded-lg ${s.ring} grid place-items-center group-hover:scale-110 transition-transform`}>
+            <Icon className="w-4 h-4" />
+          </div>
+        )}
+      </div>
+      <div className="text-[28px] font-extrabold mt-2.5 text-slate-900 tabular-nums">{value}</div>
     </div>
   )
 }
@@ -67,11 +84,11 @@ export default function Dashboard() {
           Array.from({ length: 5 }).map((_, i) => <CardSkeleton key={i} height="h-28" />)
         ) : (
           <>
-            <MetricCard label="Total Customers" value={s.total_customers} bg="#EFF6FF" />
-            <MetricCard label="Campaigns Sent" value={s.campaigns_total} bg="#F5F3FF" />
-            <MetricCard label="Messages Delivered" value={s.messages_delivered} bg="#F0FDF4" />
-            <MetricCard label="Avg Open Rate" value={pct(s.overall_open_rate)} bg="#FFFBEB" />
-            <MetricCard label="Revenue Attributed" value={inr(s.total_revenue_attributed)} bg="#FFF1F2" />
+            <MetricCard label="Total Customers" value={s.total_customers} tone="customers" icon={Users} />
+            <MetricCard label="Campaigns Sent" value={s.campaigns_total} tone="campaigns" icon={Send} />
+            <MetricCard label="Messages Delivered" value={s.messages_delivered} tone="delivered" icon={CheckCircle2} />
+            <MetricCard label="Avg Open Rate" value={pct(s.overall_open_rate)} tone="open" icon={MailOpen} />
+            <MetricCard label="Revenue Attributed" value={inr(s.total_revenue_attributed)} tone="revenue" icon={IndianRupee} />
           </>
         )}
       </div>

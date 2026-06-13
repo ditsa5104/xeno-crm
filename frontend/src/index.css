@@ -2,40 +2,104 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --bg: #f7f7fa; }
+:root {
+  --bg: #f7f6fb;
+  --brand: #7c3aed;
+}
 
 html, body, #root { height: 100%; }
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: #0f172a;
+  color: #1a1a2e;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv11', 'ss01';
+  letter-spacing: -0.011em;
 }
 
-*::-webkit-scrollbar { width: 8px; height: 8px; }
-*::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
-*::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+/* Ambient page background: very light lavender canvas with soft aurora blobs. */
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(60rem 60rem at 110% -10%, rgba(124, 58, 237, 0.07), transparent 55%),
+    radial-gradient(50rem 50rem at -10% 0%, rgba(236, 72, 153, 0.05), transparent 50%),
+    radial-gradient(45rem 45rem at 50% 120%, rgba(99, 102, 241, 0.05), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection { background: rgba(124, 58, 237, 0.18); }
+
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb { background: #d6d3e0; border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: #b8b3c9; background-clip: content-box; }
 *::-webkit-scrollbar-track { background: transparent; }
 
 @layer components {
-  .card { @apply bg-white rounded-xl border border-slate-200/70 shadow-sm; }
-  .card-hover { @apply hover:shadow-md hover:border-slate-300 transition-all; }
-  .btn { @apply inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium px-3 py-1.5 transition-all disabled:opacity-50 disabled:pointer-events-none; }
-  .btn-primary { @apply btn bg-slate-900 text-white hover:bg-slate-800; }
-  .btn-gradient { @apply btn bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-sm; }
-  .btn-ghost { @apply btn text-slate-700 hover:bg-slate-100; }
-  .btn-secondary { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50; }
-  .input { @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition; }
-  .chip { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium; }
-  .skeleton { @apply animate-pulse rounded-md bg-slate-200/70; }
+  /* Surfaces */
+  .card {
+    @apply bg-white rounded-2xl border border-slate-200/60 shadow-card;
+    backdrop-filter: saturate(1.05);
+  }
+  .card-hover {
+    @apply transition-all duration-300 ease-out hover:shadow-lift hover:border-brand-200/70 hover:-translate-y-0.5;
+  }
+  .glass {
+    @apply border border-white/60 shadow-card;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px) saturate(1.4);
+  }
+
+  /* Buttons — pill primaries per the design language, with crisp focus rings */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium px-3.5 py-2 transition-all duration-200
+           disabled:opacity-50 disabled:pointer-events-none
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-1 active:scale-[0.98];
+  }
+  .btn-primary { @apply btn rounded-full bg-slate-900 text-white shadow-soft hover:bg-slate-800 hover:shadow-card; }
+  .btn-gradient {
+    @apply btn rounded-full text-white shadow-soft hover:shadow-glow;
+    background-image: linear-gradient(120deg, #7c3aed, #8b5cf6 40%, #ec4899);
+    background-size: 160% 160%;
+    transition: background-position 0.5s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .btn-gradient:hover { background-position: 100% 0; }
+  .btn-ghost { @apply btn text-slate-600 hover:bg-slate-100/80 hover:text-slate-900; }
+  .btn-secondary { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-soft; }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none
+           placeholder:text-slate-400
+           focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 transition duration-200;
+  }
+
+  /* Chips / badges */
+  .chip { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium; }
+
+  /* Skeleton with shimmer sweep */
+  .skeleton {
+    @apply rounded-lg bg-slate-200/70 relative overflow-hidden;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* Section label */
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400; }
 }
 
-.gradient-text {
-  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(90deg, #6d28d9, #a855f7 50%, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.16,1,0.3,1) both; }
 }
 
 /* Onboarding demo — gentle gradient pulse, no hard edges */

@@ -24,22 +24,25 @@ export default function Login() {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50">
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white">
-        <div className="flex items-center gap-2 text-xl font-semibold">
+      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl animate-float" />
+        <div className="absolute bottom-10 -left-16 w-64 h-64 rounded-full bg-pink-300/20 blur-3xl" />
+        <div className="relative flex items-center gap-2 text-xl font-semibold">
           <Sparkles className="w-6 h-6" /> Xeno
         </div>
-        <div>
-          <h1 className="text-4xl font-bold leading-tight">The AI-native CRM for consumer brands.</h1>
+        <div className="relative">
+          <h1 className="text-4xl font-bold leading-tight tracking-tight">The AI-native CRM for consumer brands.</h1>
           <p className="mt-4 text-white/80 max-w-md">
             Segment your customers in plain English. Draft personalised campaigns with an AI copilot. Track delivery and revenue in real time.
           </p>
           <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
-            <Stat n="9" l="AI tools" />
-            <Stat n="5" l="Channels" />
+            <Stat n="16" l="AI tools" />
+            <Stat n="4" l="Channels" />
             <Stat n="∞" l="Possibilities" />
           </div>
         </div>
-        <div className="text-xs text-white/60">© Xeno · Built for marketers who move fast.</div>
+        <div className="relative text-xs text-white/60">© Xeno · Built for marketers who move fast.</div>
       </div>
 
       <div className="flex items-center justify-center p-6">

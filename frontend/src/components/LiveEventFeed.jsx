@@ -15,12 +15,14 @@ export default function LiveEventFeed() {
   const { events } = useWebSocket()
   return (
     <div className="card overflow-hidden">
-      <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-slate-400" />
+          <div className="w-7 h-7 rounded-lg bg-slate-900 grid place-items-center text-white">
+            <Activity className="w-3.5 h-3.5" />
+          </div>
           <div className="font-semibold text-sm">Live events</div>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full ring-1 ring-emerald-200/70">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -30,20 +32,20 @@ export default function LiveEventFeed() {
       </div>
       <div className="p-3 max-h-80 overflow-y-auto">
         {events.length === 0 && (
-          <div className="text-center py-8 text-xs text-slate-400 flex flex-col items-center gap-2">
+          <div className="text-center py-10 text-xs text-slate-400 flex flex-col items-center gap-2">
             <Wifi className="w-5 h-5" />
             Waiting for events… launch a campaign to see live activity here.
           </div>
         )}
-        <ul className="divide-y divide-slate-100">
+        <ul className="space-y-1">
           {events.map((e, i) => (
-            <li key={i} className="flex items-center gap-3 py-2 text-xs">
-              <span className={`chip ${COLORS[e.event_type] || 'bg-slate-100 text-slate-600'}`}>
+            <li key={i} className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 text-xs transition-colors animate-fade-in">
+              <span className={`chip ${COLORS[e.event_type] || 'bg-slate-100 text-slate-600'} capitalize`}>
                 {e.event_type}
               </span>
               <span className="text-slate-500 capitalize">{e.channel}</span>
               <span className="font-mono text-slate-400 truncate">{e.log_id?.slice(0, 8)}</span>
-              <span className="ml-auto text-slate-400">{e.timestamp?.slice(11, 19)}</span>
+              <span className="ml-auto text-slate-400 tabular-nums">{e.timestamp?.slice(11, 19)}</span>
             </li>
           ))}
         </ul>
