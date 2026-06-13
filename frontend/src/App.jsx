@@ -18,6 +18,7 @@ import Register from './pages/Register.jsx'
 import CopilotSidebar from './components/CopilotSidebar.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import OnboardingDemo from './components/OnboardingDemo.jsx'
+import Logo from './components/Logo.jsx'
 import { useAuth } from './contexts/AuthContext.jsx'
 import { useCopilot } from './contexts/CopilotContext.jsx'
 import { useOnboarding } from './contexts/OnboardingContext.jsx'
@@ -42,11 +43,7 @@ function Shell() {
     <div className="min-h-screen flex">
       <aside className="w-64 shrink-0 flex flex-col sticky top-0 h-screen border-r border-white/5 bg-slate-950/60 backdrop-blur-xl">
         <Link to="/" className="px-5 py-5 flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 grid place-items-center text-white shadow-glow group-hover:scale-105 transition-transform">
-            <Sparkles className="w-[18px] h-[18px]" />
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-white">Xeno</span>
-          <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-brand-300 bg-brand-500/15 px-1.5 py-0.5 rounded-md">CRM</span>
+          <Logo size="md" tone="light" showBadge />
         </Link>
 
         <nav className="px-3 space-y-0.5 flex-1 mt-1">

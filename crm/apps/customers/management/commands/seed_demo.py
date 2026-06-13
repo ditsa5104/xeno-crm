@@ -37,7 +37,7 @@ PRICES = [499, 799, 1299, 1999, 2499, 3499, 4999]
 # Demo constants from the spec.
 NEW_COLLECTION_NAME = 'Bloom Spring Collection 2026'
 NEW_SKIRT_COLLECTION_NAME = 'The Studio Skirt Edit'
-BRAND_NAME = 'Xeno'
+BRAND_NAME = 'Plume'
 
 N_CUSTOMERS = 200
 N_BIRTHDAY_THIS_MONTH = 30

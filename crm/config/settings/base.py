@@ -118,7 +118,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Xeno CRM API',
+    'TITLE': 'Plume CRM API',
     'DESCRIPTION': (
         'AI-native Mini CRM — REST API for customers, segments, campaigns, '
         'analytics, copilot, and webhook ingestion.\n\n'

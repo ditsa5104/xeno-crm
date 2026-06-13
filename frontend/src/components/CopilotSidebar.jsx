@@ -29,7 +29,7 @@ export default function CopilotSidebar() {
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <div className="font-bold leading-none">Xeno Copilot</div>
+                <div className="font-bold leading-none">Plume Copilot</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">Your marketing co-pilot</div>
               </div>
             </div>

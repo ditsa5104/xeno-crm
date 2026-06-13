@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Sparkles, Loader2, Mail, Lock } from 'lucide-react'
+import { Loader2, Mail, Lock } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext.jsx'
+import { LogoMark } from '../components/Logo.jsx'
 
 export default function Login() {
   const nav = useNavigate()
@@ -29,10 +30,10 @@ export default function Login() {
         <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl animate-float" />
         <div className="absolute bottom-10 -left-16 w-64 h-64 rounded-full bg-pink-300/20 blur-3xl" />
         <div className="relative flex items-center gap-2 text-xl font-semibold">
-          <Sparkles className="w-6 h-6" /> Xeno
+          <LogoMark className="w-9 h-9" /> Plume
         </div>
         <div className="relative">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight">The AI-native CRM for consumer brands.</h1>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight">The AI-native CRM for reaching shoppers.</h1>
           <p className="mt-4 text-white/80 max-w-md">
             Segment your customers in plain English. Draft personalised campaigns with an AI copilot. Track delivery and revenue in real time.
           </p>
@@ -42,13 +43,13 @@ export default function Login() {
             <Stat n="∞" l="Possibilities" />
           </div>
         </div>
-        <div className="relative text-xs text-white/60">© Xeno · Built for marketers who move fast.</div>
+        <div className="relative text-xs text-white/60">© Plume · Built for marketers who move fast.</div>
       </div>
 
       <div className="flex items-center justify-center p-6">
         <form onSubmit={submit} className="w-full max-w-sm space-y-5">
           <div className="lg:hidden flex items-center gap-2 text-2xl font-bold text-slate-900">
-            <Sparkles className="w-6 h-6 text-indigo-600" /> Xeno
+            <LogoMark className="w-9 h-9" /> Plume
           </div>
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>

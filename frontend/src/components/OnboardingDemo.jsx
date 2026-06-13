@@ -8,7 +8,7 @@ import { useOnboarding } from '../contexts/OnboardingContext.jsx'
 const STEPS = [
   {
     kind: 'welcome',
-    title: 'Welcome to your Mini CRM',
+    title: 'Welcome to Plume',
     body: 'Let us show you how it works — a quick, clickable tour using two ready-made campaigns.',
     route: '/',
   },
@@ -38,7 +38,7 @@ const STEPS = [
   },
   {
     kind: 'complete',
-    title: "That's the Mini CRM in action",
+    title: "That's Plume in action",
     body: "You're all set! Explore your dashboard, customers, segments, and campaigns whenever you're ready.",
     route: '/',
   },

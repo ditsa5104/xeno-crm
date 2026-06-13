@@ -10,7 +10,7 @@ def get_ai_client() -> OpenAI:
         api_key=settings.OPENROUTER_API_KEY,
         default_headers={
             "HTTP-Referer": settings.SITE_URL,
-            "X-Title": "Xeno CRM",
+            "X-Title": "Plume CRM",
         },
     )
 
