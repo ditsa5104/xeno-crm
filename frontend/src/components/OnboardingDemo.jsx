@@ -66,7 +66,7 @@ export default function OnboardingDemo() {
 
       <div className="relative w-full max-w-md rounded-3xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
         {/* Gentle gradient header */}
-        <div className="h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative">
+        <div className="h-24 bg-gradient-to-br from-emerald-500 via-emerald-500 to-teal-400 relative">
           <div className="absolute inset-0 onboarding-gradient-pulse opacity-70" />
           <button
             onClick={finish}
@@ -76,12 +76,12 @@ export default function OnboardingDemo() {
             <X className="w-5 h-5" />
           </button>
           <div className="absolute -bottom-6 left-6 w-12 h-12 rounded-2xl bg-white shadow-md grid place-items-center">
-            <Sparkles className="w-6 h-6 text-purple-600" />
+            <Sparkles className="w-6 h-6 text-emerald-600" />
           </div>
         </div>
 
         <div className="p-6 pt-9">
-          <div className="text-xs font-semibold uppercase tracking-wide text-purple-500 mb-1">
+          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 mb-1">
             {isFirst || isLast ? 'Interactive demo' : `Step ${step} of ${STEPS.length - 2}`}
           </div>
           <h2 className="text-xl font-bold text-slate-900">{current.title}</h2>
@@ -117,7 +117,7 @@ export default function OnboardingDemo() {
               <span
                 key={i}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === step ? 'w-5 bg-purple-500' : 'w-1.5 bg-slate-200'
+                  i === step ? 'w-5 bg-emerald-500' : 'w-1.5 bg-slate-200'
                 }`}
               />
             ))}

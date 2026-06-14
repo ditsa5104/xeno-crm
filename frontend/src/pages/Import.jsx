@@ -54,7 +54,7 @@ export default function Import() {
           if (f) setFile(f)
         }}
         className={`block card p-10 border-2 border-dashed cursor-pointer text-center transition ${
-          drag ? 'border-indigo-500 bg-indigo-50' : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
+          drag ? 'border-emerald-500 bg-emerald-50' : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
         }`}
       >
         <input type="file" accept=".csv" className="hidden" onChange={(e) => setFile(e.target.files?.[0])} />

@@ -25,7 +25,7 @@ export default function CustomerTimeline({ orders, communications }) {
     <ol className="relative border-l-2 border-slate-100 pl-6 space-y-5 ml-2">
       {items.map((it, i) => {
         const Icon = it.kind === 'order' ? ShoppingBag : Send
-        const color = it.kind === 'order' ? 'bg-emerald-500' : 'bg-indigo-500'
+        const color = it.kind === 'order' ? 'bg-emerald-500' : 'bg-teal-500'
         return (
           <li key={i} className="relative">
             <span className={`absolute -left-[34px] top-0 w-7 h-7 rounded-full ${color} grid place-items-center text-white shadow ring-4 ring-white`}>

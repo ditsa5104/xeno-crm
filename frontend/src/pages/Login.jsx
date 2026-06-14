@@ -69,7 +69,7 @@ export default function Login() {
 
           {err && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{err}</div>}
 
-          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 px-3.5 py-3 text-xs text-indigo-900">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-3 text-xs text-emerald-900">
             <span className="font-semibold">👋 Reviewer from Xeno?</span> Use the temp credentials below to see the CRM in action with mock data — username <code className="font-mono font-semibold">tempuser_check</code>, password <code className="font-mono font-semibold">TempPass#2026</code>.
           </div>
 
@@ -104,7 +104,7 @@ export default function Login() {
 
           <div className="text-sm text-slate-500 text-center">
             Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-600 font-medium hover:underline">Create one</Link>
+            <Link to="/register" className="text-emerald-600 font-medium hover:underline">Create one</Link>
           </div>
         </form>
       </div>
@@ -116,7 +116,7 @@ function Field({ icon, label, children }) {
   return (
     <label className="block">
       <span className="text-xs font-medium text-slate-600 mb-1 block">{label}</span>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
         <span className="text-slate-400">{icon}</span>
         {children}
       </div>

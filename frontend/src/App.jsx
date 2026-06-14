@@ -66,7 +66,7 @@ function Shell() {
                 {({ isActive }) => (
                   <>
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-gradient-to-b from-indigo-400 to-pink-400" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-gradient-to-b from-emerald-400 to-teal-400" />
                     )}
                     <Icon className={`w-[18px] h-[18px] transition-transform ${isActive ? 'text-brand-300' : 'group-hover:scale-110'}`} />
                     {n.label}
@@ -107,7 +107,7 @@ function Shell() {
             onClick={() => setMenu((m) => !m)}
             className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-white/5 transition"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 grid place-items-center text-white text-xs font-bold shadow-soft">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 grid place-items-center text-white text-xs font-bold shadow-soft">
               {(user?.name || user?.username || 'U').slice(0, 1).toUpperCase()}
             </div>
             <div className="flex-1 text-left min-w-0">

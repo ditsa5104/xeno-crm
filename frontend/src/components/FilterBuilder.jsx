@@ -16,7 +16,7 @@ export default function FilterBuilder({ value, onChange, depth = 0 }) {
     return (
       <div className="flex gap-2 items-center bg-white">
         <select
-          className="rounded-md border border-slate-200 px-2 py-1 text-xs bg-white outline-none focus:border-indigo-500"
+          className="rounded-md border border-slate-200 px-2 py-1 text-xs bg-white outline-none focus:border-emerald-500"
           value={node.field || ''}
           onChange={(e) => onChange({ ...node, field: e.target.value })}
         >
@@ -24,7 +24,7 @@ export default function FilterBuilder({ value, onChange, depth = 0 }) {
           {FIELDS.map((f) => <option key={f} value={f}>{f}</option>)}
         </select>
         <select
-          className="rounded-md border border-slate-200 px-2 py-1 text-xs bg-white outline-none focus:border-indigo-500"
+          className="rounded-md border border-slate-200 px-2 py-1 text-xs bg-white outline-none focus:border-emerald-500"
           value={node.op || ''}
           onChange={(e) => onChange({ ...node, op: e.target.value })}
         >
@@ -32,7 +32,7 @@ export default function FilterBuilder({ value, onChange, depth = 0 }) {
           {OPS.map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
         <input
-          className="rounded-md border border-slate-200 px-2 py-1 text-xs flex-1 outline-none focus:border-indigo-500"
+          className="rounded-md border border-slate-200 px-2 py-1 text-xs flex-1 outline-none focus:border-emerald-500"
           placeholder="value"
           value={node.value ?? ''}
           onChange={(e) => onChange({ ...node, value: e.target.value })}
@@ -52,7 +52,7 @@ export default function FilterBuilder({ value, onChange, depth = 0 }) {
     onChange({ ...node, conditions: cs })
   }
 
-  const borderColor = depth % 2 ? 'border-purple-200 bg-purple-50/30' : 'border-indigo-200 bg-indigo-50/30'
+  const borderColor = depth % 2 ? 'border-teal-200 bg-teal-50/30' : 'border-emerald-200 bg-emerald-50/30'
 
   return (
     <div className={`rounded-lg border-l-4 ${borderColor} pl-4 pr-3 py-3`}>

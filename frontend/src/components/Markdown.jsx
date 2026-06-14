@@ -28,7 +28,7 @@ function renderInline(text, keyPrefix) {
     } else if (tok.startsWith('[')) {
       const lm = /\[([^\]]+)\]\(([^)]+)\)/.exec(tok)
       tokens.push(
-        <a key={`${keyPrefix}-a${i}`} href={lm[2]} target="_blank" rel="noreferrer" className="text-indigo-600 underline">
+        <a key={`${keyPrefix}-a${i}`} href={lm[2]} target="_blank" rel="noreferrer" className="text-emerald-600 underline">
           {lm[1]}
         </a>
       )

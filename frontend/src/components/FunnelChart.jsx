@@ -1,7 +1,7 @@
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts'
 
-const COLORS = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e']
+const COLORS = ['#064e3b', '#047857', '#059669', '#10b981', '#34d399', '#6ee7b7']
 
 export default function FunnelChart({ stats }) {
   const data = [

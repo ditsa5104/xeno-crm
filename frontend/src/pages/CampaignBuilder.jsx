@@ -94,7 +94,7 @@ export default function CampaignBuilder() {
                     type="button"
                     onClick={() => setForm({ ...form, channel: c.id })}
                     className={`flex flex-col items-center gap-1 px-2 py-2.5 rounded-lg border text-xs font-medium transition ${
-                      active ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-100' : 'border-slate-200 hover:bg-slate-50 text-slate-600'
+                      active ? 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-2 ring-emerald-100' : 'border-slate-200 hover:bg-slate-50 text-slate-600'
                     }`}
                   >
                     <Icon className="w-4 h-4" /> {c.label}

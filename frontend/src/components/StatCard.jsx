@@ -2,9 +2,9 @@ import React from 'react'
 
 export default function StatCard({ label, value, icon: Icon, accent = 'indigo', delta }) {
   const accents = {
-    indigo: { grad: 'from-indigo-500/10 to-transparent', icon: 'text-indigo-600', ring: 'bg-indigo-50' },
-    purple: { grad: 'from-purple-500/10 to-transparent', icon: 'text-purple-600', ring: 'bg-purple-50' },
-    pink: { grad: 'from-pink-500/10 to-transparent', icon: 'text-pink-600', ring: 'bg-pink-50' },
+    indigo: { grad: 'from-emerald-500/10 to-transparent', icon: 'text-emerald-600', ring: 'bg-emerald-50' },
+    purple: { grad: 'from-teal-500/10 to-transparent', icon: 'text-teal-600', ring: 'bg-teal-50' },
+    pink: { grad: 'from-green-500/10 to-transparent', icon: 'text-green-600', ring: 'bg-green-50' },
     emerald: { grad: 'from-emerald-500/10 to-transparent', icon: 'text-emerald-600', ring: 'bg-emerald-50' },
     amber: { grad: 'from-amber-500/10 to-transparent', icon: 'text-amber-600', ring: 'bg-amber-50' },
   }

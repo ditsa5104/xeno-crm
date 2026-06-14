@@ -16,14 +16,14 @@ const CHANNEL_COLOR = {
   whatsapp: '#10B981',
   email: '#3B82F6',
   sms: '#6B7280',
-  rcs: '#7C3AED',
-  auto: '#7C3AED',
+  rcs: '#0d9488',
+  auto: '#059669',
 }
 
 const STATUS_BADGE = {
   draft: 'bg-slate-100 text-slate-600',
   scheduled: 'bg-amber-100 text-amber-700',
-  running: 'bg-indigo-100 text-indigo-700',
+  running: 'bg-emerald-100 text-emerald-700',
   paused: 'bg-amber-100 text-amber-700',
   completed: 'bg-emerald-100 text-emerald-700',
   failed: 'bg-red-100 text-red-700',
@@ -35,7 +35,7 @@ const inr = (v) =>
 
 const METRIC_STYLES = {
   customers: { bg: 'from-blue-50 to-white', ring: 'bg-blue-100/70 text-blue-600' },
-  campaigns: { bg: 'from-violet-50 to-white', ring: 'bg-violet-100/70 text-violet-600' },
+  campaigns: { bg: 'from-teal-50 to-white', ring: 'bg-teal-100/70 text-teal-600' },
   delivered: { bg: 'from-emerald-50 to-white', ring: 'bg-emerald-100/70 text-emerald-600' },
   open: { bg: 'from-amber-50 to-white', ring: 'bg-amber-100/70 text-amber-600' },
   revenue: { bg: 'from-rose-50 to-white', ring: 'bg-rose-100/70 text-rose-600' },
@@ -121,7 +121,7 @@ export default function Dashboard() {
                   {data.recent_campaigns.map((c) => (
                     <tr key={c.id} className="border-b border-slate-50 hover:bg-slate-50/60">
                       <td className="py-2.5 pr-3">
-                        <Link to={`/campaigns/${c.id}`} className="font-medium text-slate-800 hover:text-indigo-600">
+                        <Link to={`/campaigns/${c.id}`} className="font-medium text-slate-800 hover:text-emerald-600">
                           {c.name}
                         </Link>
                         <div className="text-xs text-slate-400">{c.segment_name}</div>
@@ -163,7 +163,7 @@ export default function Dashboard() {
                   </div>
                   <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                      className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
                       style={{ width: `${Math.min(100, (seg.engagement_rate || 0) * 100)}%` }}
                     />
                   </div>
@@ -186,16 +186,16 @@ export default function Dashboard() {
             <AreaChart data={data?.performance || []} margin={{ left: 0, right: 12, top: 8, bottom: 4 }}>
               <defs>
                 <linearGradient id="gSent" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#7C3AED" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#059669" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#059669" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gOpened" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gClicked" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#EC4899" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#EC4899" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#0d9488" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#0d9488" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -207,9 +207,9 @@ export default function Dashboard() {
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
               <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Area type="monotone" dataKey="sent" stroke="#7C3AED" fill="url(#gSent)" strokeWidth={2} name="Sent" />
+              <Area type="monotone" dataKey="sent" stroke="#059669" fill="url(#gSent)" strokeWidth={2} name="Sent" />
               <Area type="monotone" dataKey="opened" stroke="#10B981" fill="url(#gOpened)" strokeWidth={2} name="Opened" />
-              <Area type="monotone" dataKey="clicked" stroke="#EC4899" fill="url(#gClicked)" strokeWidth={2} name="Clicked" />
+              <Area type="monotone" dataKey="clicked" stroke="#0d9488" fill="url(#gClicked)" strokeWidth={2} name="Clicked" />
             </AreaChart>
           </ResponsiveContainer>
         )}

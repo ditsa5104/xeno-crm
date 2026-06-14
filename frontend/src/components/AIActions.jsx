@@ -35,7 +35,7 @@ export default function AIActions() {
       <div className="relative">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 grid place-items-center text-white">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-500 grid place-items-center text-white">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
             <h2 className="font-semibold text-slate-800">AI actions</h2>
@@ -57,7 +57,7 @@ export default function AIActions() {
                 onClick={() => setActive(ins)}
                 className="group text-left rounded-xl border border-slate-200 p-3.5 hover:border-brand-300 hover:bg-brand-50/40 hover:shadow-soft transition-all"
               >
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10 text-brand-600 grid place-items-center mb-2.5 group-hover:scale-110 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500/10 to-teal-500/10 text-brand-600 grid place-items-center mb-2.5 group-hover:scale-110 transition-transform">
                   <Icon className="w-[18px] h-[18px]" />
                 </div>
                 <div className="text-sm font-semibold text-slate-800 leading-snug">{ins.label}</div>

@@ -70,7 +70,7 @@ export default function Customers() {
               rows.map((c) => (
                 <tr key={c.id} className="hover:bg-slate-50 transition">
                   <td className="px-4 py-3">
-                    <Link to={`/customers/${c.id}`} className="font-medium text-slate-900 hover:text-indigo-600">{c.name}</Link>
+                    <Link to={`/customers/${c.id}`} className="font-medium text-slate-900 hover:text-emerald-600">{c.name}</Link>
                   </td>
                   <td className="px-4 py-3 text-slate-500">{c.email || '—'}</td>
                   <td className="px-4 py-3 text-slate-700">{c.city || '—'}</td>

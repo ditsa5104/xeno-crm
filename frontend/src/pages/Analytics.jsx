@@ -32,7 +32,7 @@ export default function Analytics() {
               <Tooltip contentStyle={TOOLTIP} cursor={{ fill: '#f8fafc' }} />
               <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
               <Bar dataKey="delivered" fill="#10b981" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="clicked" fill="#6366f1" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="clicked" fill="#0d9488" radius={[6, 6, 0, 0]} />
               <Bar dataKey="failed" fill="#ef4444" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -52,7 +52,7 @@ export default function Analytics() {
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
               <Tooltip contentStyle={TOOLTIP} />
               <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="customers" stroke="#6366f1" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+              <Line type="monotone" dataKey="customers" stroke="#0d9488" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
               <Line type="monotone" dataKey="spend" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
             </LineChart>
           </ResponsiveContainer>

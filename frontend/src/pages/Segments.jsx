@@ -30,10 +30,10 @@ export default function Segments() {
       <PageHeader title="Segments" subtitle="Group customers using filters or natural language." />
 
       <div className="card p-5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-emerald-500/5 to-teal-500/5 pointer-events-none" />
         <div className="relative">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 grid place-items-center text-white">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-500 grid place-items-center text-white">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
@@ -100,7 +100,7 @@ export default function Segments() {
                   <td className="px-4 py-3 text-right tabular-nums font-medium">{s.customer_count}</td>
                   <td className="px-4 py-3">
                     {s.ai_generated
-                      ? <span className="chip bg-gradient-to-r from-indigo-50 to-purple-50 text-purple-700 ring-1 ring-purple-200"><Sparkles className="w-3 h-3" />AI</span>
+                      ? <span className="chip bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 ring-1 ring-emerald-200"><Sparkles className="w-3 h-3" />AI</span>
                       : <span className="text-xs text-slate-400">Manual</span>}
                   </td>
                 </tr>

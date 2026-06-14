@@ -25,7 +25,7 @@ export default function CopilotSidebar() {
         <div className="px-5 py-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-transparent">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 grid place-items-center text-white shadow-glow">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 grid place-items-center text-white shadow-glow">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
@@ -111,7 +111,7 @@ export default function CopilotSidebar() {
           onSubmit={(e) => { e.preventDefault(); if (input.trim() && !busy) { send(input); setInput('') } }}
           className="p-4 border-t border-slate-200"
         >
-          <div className="flex items-end gap-2 rounded-xl border border-slate-200 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 bg-white p-2 transition">
+          <div className="flex items-end gap-2 rounded-xl border border-slate-200 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 bg-white p-2 transition">
             <textarea
               rows={1}
               className="flex-1 px-2 py-1 text-sm outline-none resize-none max-h-32"
@@ -124,7 +124,7 @@ export default function CopilotSidebar() {
             />
             <button
               disabled={!input.trim() || busy}
-              className="rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-2 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:from-slate-300 disabled:to-slate-300"
+              className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 text-white p-2 hover:from-emerald-700 hover:to-teal-600 disabled:opacity-50 disabled:from-slate-300 disabled:to-slate-300"
             >
               <Send className="w-4 h-4" />
             </button>

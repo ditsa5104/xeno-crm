@@ -4,8 +4,8 @@ import { MessageSquare, Mail, Smartphone } from 'lucide-react'
 const META = {
   whatsapp: { label: 'WhatsApp', icon: MessageSquare, accent: 'bg-emerald-500' },
   sms: { label: 'SMS', icon: Smartphone, accent: 'bg-blue-500' },
-  email: { label: 'Email', icon: Mail, accent: 'bg-indigo-500' },
-  rcs: { label: 'RCS', icon: MessageSquare, accent: 'bg-purple-500' },
+  email: { label: 'Email', icon: Mail, accent: 'bg-sky-500' },
+  rcs: { label: 'RCS', icon: MessageSquare, accent: 'bg-teal-500' },
   auto: { label: 'Auto', icon: MessageSquare, accent: 'bg-slate-500' },
 }
 
@@ -21,7 +21,7 @@ export default function MessagePreview({ channel = 'whatsapp', body = '' }) {
     return (
       <div className="card overflow-hidden">
         <div className="px-4 py-2 border-b border-slate-200 bg-slate-50 flex items-center gap-2">
-          <Icon className="w-4 h-4 text-indigo-500" />
+          <Icon className="w-4 h-4 text-emerald-500" />
           <span className="text-xs font-medium text-slate-600">{meta.label}</span>
         </div>
         <div className="p-5">

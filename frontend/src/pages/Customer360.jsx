@@ -24,7 +24,7 @@ export default function Customer360() {
 
       <div className="card p-6">
         <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-pink-500 grid place-items-center text-white text-xl font-bold shadow">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 grid place-items-center text-white text-xl font-bold shadow">
             {initials}
           </div>
           <div className="flex-1">

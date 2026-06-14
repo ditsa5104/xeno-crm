@@ -7,8 +7,8 @@ const COLORS = {
   delivered: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
   failed: 'bg-red-50 text-red-700 ring-1 ring-red-200',
   opened: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
-  read: 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
-  clicked: 'bg-pink-50 text-pink-700 ring-1 ring-pink-200',
+  read: 'bg-teal-50 text-teal-700 ring-1 ring-teal-200',
+  clicked: 'bg-lime-50 text-lime-700 ring-1 ring-lime-200',
 }
 
 export default function LiveEventFeed() {

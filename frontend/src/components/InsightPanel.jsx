@@ -34,7 +34,7 @@ export default function InsightPanel({ insightKey, title, onClose }) {
       <div className="fixed top-0 right-0 h-full w-[460px] max-w-full bg-white shadow-lift flex flex-col z-50 animate-scale-in origin-right">
         <div className="px-5 py-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-b from-brand-50/60 to-transparent">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 grid place-items-center text-white shadow-glow">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 grid place-items-center text-white shadow-glow">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
