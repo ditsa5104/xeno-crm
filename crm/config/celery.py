@@ -32,4 +32,8 @@ app.conf.beat_schedule = {
         'task': 'apps.campaigns.tasks.select_ab_winners',
         'schedule': crontab(minute='*/30'),
     },
+    'dispatch-due-campaigns': {
+        'task': 'apps.campaigns.tasks.dispatch_due_campaigns',
+        'schedule': crontab(minute='*'),  # every minute
+    },
 }

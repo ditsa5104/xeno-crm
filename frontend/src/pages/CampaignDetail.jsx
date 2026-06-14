@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Play, Pause, ListChecks, Loader2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Play, Pause, ListChecks, Loader2, AlertCircle, CalendarClock } from 'lucide-react'
 import { api } from '../api/client.js'
 import FunnelChart from '../components/FunnelChart.jsx'
 import MessagePreview from '../components/MessagePreview.jsx'
@@ -34,10 +34,17 @@ export default function CampaignDetail() {
     mutationFn: () => api.post(`/api/v1/campaigns/${id}/pause/`),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['camp', id] }),
   })
+  const cancelSchedule = useMutation({
+    mutationFn: () => api.post(`/api/v1/campaigns/${id}/cancel-schedule/`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['camp', id] }),
+  })
   const preflight = useMutation({ mutationFn: () => api.post(`/api/v1/campaigns/${id}/preflight/`) })
 
   if (camp.isLoading) return <CardSkeleton height="h-64" />
   const c = camp.data
+  // A campaign is "scheduled for later" only when it has a future scheduled_at.
+  const scheduledFor = c.status === 'scheduled' && c.scheduled_at ? new Date(c.scheduled_at) : null
+  const isFutureScheduled = scheduledFor && scheduledFor.getTime() > Date.now()
 
   return (
     <div className="space-y-6">
@@ -72,6 +79,27 @@ export default function CampaignDetail() {
           )}
         </div>
       </div>
+
+      {isFutureScheduled && (
+        <div className="card p-4 border-blue-200 bg-blue-50/60">
+          <div className="flex items-center gap-3">
+            <CalendarClock className="w-5 h-5 text-blue-600 shrink-0" />
+            <div className="flex-1 text-sm">
+              <div className="font-medium text-blue-900">Scheduled to send</div>
+              <div className="text-blue-800">
+                {scheduledFor.toLocaleString(undefined, {
+                  weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                })}
+              </div>
+            </div>
+            <button onClick={() => cancelSchedule.mutate()} disabled={cancelSchedule.isPending} className="btn-secondary">
+              {cancelSchedule.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+              Cancel schedule
+            </button>
+          </div>
+        </div>
+      )}
 
       {preflight.data && (
         <div className="card p-4 border-amber-200 bg-amber-50/50">

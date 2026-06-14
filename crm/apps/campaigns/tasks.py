@@ -17,6 +17,40 @@ def launch_campaign(self, campaign_id):
     return CampaignDispatcher(c).dispatch()
 
 
+@shared_task(queue='campaigns')
+def dispatch_due_campaigns():
+    """Beat task: dispatch any scheduled campaign whose send time has arrived.
+
+    Runs frequently (see beat_schedule). A campaign is 'due' when it is in
+    'scheduled' status with a scheduled_at in the past. We flip it to 'running'
+    inside a row lock first so two overlapping beat ticks can't double-dispatch
+    the same campaign.
+    """
+    from django.db import transaction
+    now = timezone.now()
+    due = Campaign.objects.filter(
+        status='scheduled',
+        scheduled_at__isnull=False,
+        scheduled_at__lte=now,
+    ).values_list('id', flat=True)
+
+    dispatched = 0
+    for cid in list(due):
+        with transaction.atomic():
+            c = Campaign.objects.select_for_update().filter(id=cid, status='scheduled').first()
+            if not c:
+                continue  # claimed by another tick or status changed
+            # Claim it so a concurrent tick won't pick it up. dispatch() will set
+            # it to 'running' too, but claiming here closes the race window.
+            c.status = 'running'
+            c.save(update_fields=['status'])
+        launch_campaign.delay(str(cid))
+        dispatched += 1
+    if dispatched:
+        logger.info("dispatch_due_campaigns queued %d campaign(s)", dispatched)
+    return dispatched
+
+
 @shared_task(bind=True, max_retries=3, queue='campaigns')
 def dispatch_single_message(self, log_id):
     """Retry a single failed CommunicationLog by creating a new one."""

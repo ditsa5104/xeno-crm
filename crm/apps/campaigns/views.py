@@ -25,10 +25,47 @@ class CampaignViewSet(viewsets.ModelViewSet):
         c = self.get_object()
         if c.status not in ('draft', 'scheduled', 'paused'):
             return Response({'error': f'Cannot launch from {c.status}'}, status=400)
+        # Immediate launch: clear any schedule and dispatch now.
         launch_campaign.delay(str(c.id))
         c.status = 'scheduled'
-        c.save(update_fields=['status'])
+        c.scheduled_at = None
+        c.save(update_fields=['status', 'scheduled_at'])
         return Response({'status': 'queued'})
+
+    @action(detail=True, methods=['post'])
+    def schedule(self, request, pk=None):
+        """Schedule a campaign to send at a future time. A beat task dispatches it
+        when scheduled_at arrives."""
+        c = self.get_object()
+        if c.status not in ('draft', 'scheduled', 'paused'):
+            return Response({'error': f'Cannot schedule from {c.status}'}, status=400)
+        raw = request.data.get('scheduled_at')
+        if not raw:
+            return Response({'error': 'scheduled_at is required'}, status=400)
+        from django.utils.dateparse import parse_datetime
+        when = parse_datetime(raw)
+        if when is None:
+            return Response({'error': 'scheduled_at must be an ISO 8601 datetime'}, status=400)
+        if timezone.is_naive(when):
+            when = timezone.make_aware(when, timezone.get_current_timezone())
+        if when <= timezone.now():
+            return Response({'error': 'scheduled_at must be in the future'}, status=400)
+        c.status = 'scheduled'
+        c.send_mode = 'scheduled'
+        c.scheduled_at = when
+        c.save(update_fields=['status', 'send_mode', 'scheduled_at'])
+        return Response({'status': 'scheduled', 'scheduled_at': c.scheduled_at.isoformat()})
+
+    @action(detail=True, methods=['post'], url_path='cancel-schedule')
+    def cancel_schedule(self, request, pk=None):
+        """Revert a scheduled (not-yet-sent) campaign back to draft."""
+        c = self.get_object()
+        if c.status != 'scheduled' or not c.scheduled_at:
+            return Response({'error': 'Campaign is not scheduled'}, status=400)
+        c.status = 'draft'
+        c.scheduled_at = None
+        c.save(update_fields=['status', 'scheduled_at'])
+        return Response({'status': 'draft'})
 
     @action(detail=True, methods=['post'])
     def pause(self, request, pk=None):
