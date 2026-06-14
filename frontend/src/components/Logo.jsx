@@ -8,7 +8,7 @@ import React from 'react'
 export function LogoMark({ className = 'w-9 h-9', rounded = 'rounded-xl' }) {
   return (
     <span
-      className={`${className} ${rounded} grid place-items-center text-white shadow-glow bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500`}
+      className={`${className} ${rounded} grid place-items-center text-white bg-[#11141a] ring-1 ring-white/10 shadow-soft`}
     >
       <svg viewBox="0 0 24 24" fill="none" className="w-[58%] h-[58%]" aria-hidden="true">
         {/* feather body */}
@@ -21,12 +21,12 @@ export function LogoMark({ className = 'w-9 h-9', rounded = 'rounded-xl' }) {
         <path
           d="M19 5c1 5.5-1.3 10.2-6 12-2.2.85-4.4 1-6 .9C8.5 11.5 12.7 6.6 19 5Z"
           fill="white"
-          fillOpacity="0.92"
+          fillOpacity="0.95"
         />
         {/* quill spine */}
         <path
           d="M16 8 8.5 16"
-          stroke="#7c3aed"
+          stroke="#11141a"
           strokeWidth="1.3"
           strokeLinecap="round"
         />

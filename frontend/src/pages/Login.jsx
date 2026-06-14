@@ -25,25 +25,36 @@ export default function Login() {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50">
-      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl animate-float" />
-        <div className="absolute bottom-10 -left-16 w-64 h-64 rounded-full bg-pink-300/20 blur-3xl" />
-        <div className="relative flex items-center gap-2 text-xl font-semibold">
+      <div className="relative hidden lg:flex flex-col justify-between p-14 bg-[#0f1216] text-white overflow-hidden">
+        {/* Restrained editorial backdrop: faint hairline grid, no gradient wash. */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '46px 46px' }}
+        />
+        <div className="absolute left-14 top-0 bottom-0 w-px bg-white/[0.06]" />
+
+        <div className="relative flex items-center gap-2.5 text-lg font-semibold">
           <LogoMark className="w-9 h-9" /> Plume
         </div>
-        <div className="relative">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight">The AI-native CRM for reaching shoppers.</h1>
-          <p className="mt-4 text-white/80 max-w-md">
-            Segment your customers in plain English. Draft personalised campaigns with an AI copilot. Track delivery and revenue in real time.
+
+        <div className="relative max-w-md">
+          <div className="h-px w-10 bg-emerald-400/80 mb-6" />
+          <h1 className="text-[2.6rem] leading-[1.08] font-semibold tracking-tight">
+            Reach the right shopper,<br />at the right moment.
+          </h1>
+          <p className="mt-5 text-[15px] leading-relaxed text-slate-400">
+            Plume turns your customer and order data into segments, personalised
+            messages, and multi-channel campaigns — with delivery and revenue
+            tracked end to end.
           </p>
-          <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
-            <Stat n="16" l="AI tools" />
-            <Stat n="4" l="Channels" />
-            <Stat n="∞" l="Possibilities" />
-          </div>
+          <ul className="mt-8 space-y-3 text-sm text-slate-300">
+            <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" /> Segment shoppers by behaviour and value</li>
+            <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" /> Draft and send across WhatsApp, SMS, Email & RCS</li>
+            <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" /> Watch delivery and conversions in real time</li>
+          </ul>
         </div>
-        <div className="relative text-xs text-white/60">© Plume · Built for marketers who move fast.</div>
+
+        <div className="relative text-xs text-slate-500">© Plume · Built for marketers who move fast.</div>
       </div>
 
       <div className="flex items-center justify-center p-6">
@@ -110,14 +121,5 @@ function Field({ icon, label, children }) {
         {children}
       </div>
     </label>
-  )
-}
-
-function Stat({ n, l }) {
-  return (
-    <div>
-      <div className="text-3xl font-bold">{n}</div>
-      <div className="text-xs text-white/70">{l}</div>
-    </div>
   )
 }
