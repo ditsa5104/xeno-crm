@@ -45,6 +45,42 @@ class StateMachineTests(TestCase):
         self.assertTrue(CommunicationStateMachine.apply(log, 'delivered', now, {}))
         self.assertFalse(CommunicationStateMachine.apply(log, 'delivered', now, {}))
 
+    def test_valid_communication_state_transition_updates_status(self):
+        # Unit testing: queued -> sent -> delivered is a valid progression.
+        log = self._log()
+        now = timezone.now()
+        self.assertTrue(CommunicationStateMachine.apply(log, 'sent', now, {}))
+        self.assertEqual(log.status, 'sent')
+        self.assertTrue(CommunicationStateMachine.apply(log, 'delivered', now, {}))
+        self.assertEqual(log.status, 'delivered')
+        self.assertIsNotNone(log.delivered_at)
+
+    def test_valid_communication_state_transition_queued_to_delivered_updates_status(self):
+        # Unit testing: a valid queued -> sent -> delivered transition should update status correctly.
+        log = self._log()
+        now = timezone.now()
+        self.assertTrue(CommunicationStateMachine.apply(log, 'sent', now, {}))
+        self.assertEqual(log.status, 'sent')
+        self.assertTrue(CommunicationStateMachine.apply(log, 'delivered', now, {}))
+        self.assertEqual(log.status, 'delivered')
+        self.assertIsNotNone(log.delivered_at)
+
+    def test_duplicate_communication_event_is_ignored_for_same_stage(self):
+        # Cause-Effect: duplicate callback should not advance or double-count state.
+        log = self._log()
+        now = timezone.now()
+        self.assertTrue(CommunicationStateMachine.apply(log, 'sent', now, {}))
+        self.assertFalse(CommunicationStateMachine.apply(log, 'sent', now, {}))
+        self.assertEqual(log.status, 'sent')
+
+    def test_duplicate_communication_event_is_ignored_without_state_change(self):
+        # Cause-Effect: applying the same event twice should be ignored and not change the status.
+        log = self._log()
+        now = timezone.now()
+        self.assertTrue(CommunicationStateMachine.apply(log, 'delivered', now, {}))
+        self.assertFalse(CommunicationStateMachine.apply(log, 'delivered', now, {}))
+        self.assertEqual(log.status, 'delivered')
+
     def test_failed_after_success_is_ignored(self):
         log = self._log()
         now = timezone.now()
@@ -84,7 +120,65 @@ class WebhookHMACTests(TestCase):
         )
         self.assertEqual(resp.status_code, 401)
 
+    def test_invalid_webhook_signature_is_rejected_with_401(self):
+        # Integration testing: invalid HMAC signature must be rejected.
+        body = json.dumps({'message_id': str(self.log.id), 'event_type': 'sent'})
+        resp = self.client.post(
+            '/api/v1/webhooks/channel-event/',
+            data=body,
+            content_type='application/json',
+            HTTP_X_XENO_SIGNATURE='bogus',
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_invalid_webhook_signature_returns_401_for_rejected_request(self):
+        # Integration testing: a bad signature should be rejected with HTTP 401.
+        body = json.dumps({'message_id': str(self.log.id), 'event_type': 'sent'})
+        resp = self.client.post(
+            '/api/v1/webhooks/channel-event/',
+            data=body,
+            content_type='application/json',
+            HTTP_X_XENO_SIGNATURE='bogus-signature',
+        )
+        self.assertEqual(resp.status_code, 401)
+
     def test_valid_signature_advances_status(self):
+        body = json.dumps({
+            'message_id': str(self.log.id),
+            'event_type': 'sent',
+            'occurred_at': timezone.now().isoformat(),
+        })
+        sig = hmac_sign(body.encode())
+        resp = self.client.post(
+            '/api/v1/webhooks/channel-event/',
+            data=body,
+            content_type='application/json',
+            HTTP_X_XENO_SIGNATURE=sig,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.log.refresh_from_db()
+        self.assertEqual(self.log.status, 'sent')
+
+    def test_valid_webhook_signature_is_accepted_and_updates_status(self):
+        # Integration testing: a valid signed callback should pass validation and update state.
+        body = json.dumps({
+            'message_id': str(self.log.id),
+            'event_type': 'delivered',
+            'occurred_at': timezone.now().isoformat(),
+        })
+        sig = hmac_sign(body.encode())
+        resp = self.client.post(
+            '/api/v1/webhooks/channel-event/',
+            data=body,
+            content_type='application/json',
+            HTTP_X_XENO_SIGNATURE=sig,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.log.refresh_from_db()
+        self.assertEqual(self.log.status, 'delivered')
+
+    def test_valid_webhook_signature_accepts_request_and_updates_communication_status(self):
+        # Integration testing: correctly signed requests must be accepted and update state.
         body = json.dumps({
             'message_id': str(self.log.id),
             'event_type': 'sent',

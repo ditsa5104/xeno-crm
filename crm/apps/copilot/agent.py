@@ -1,5 +1,6 @@
 import json
 import logging
+from typing import Any, Dict, List, Optional
 from openai import APIError, RateLimitError
 from apps.core.ai_client import get_ai_client, get_model
 from .prompts import COPILOT_CHAT_SYSTEM_PROMPT, COPILOT_AGENT_SYSTEM_PROMPT
@@ -11,7 +12,7 @@ MAX_TOOL_ROUNDS = 8
 
 
 class CopilotAgent:
-    def run(self, messages: list[dict], context: dict | None = None, mode: str = 'chat') -> dict:
+    def run(self, messages: List[Dict[str, Any]], context: Optional[Dict[str, Any]] = None, mode: str = 'chat') -> Dict[str, Any]:
         context = context or {}
         system = COPILOT_AGENT_SYSTEM_PROMPT if mode == 'agent' else COPILOT_CHAT_SYSTEM_PROMPT
         client = get_ai_client()

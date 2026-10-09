@@ -1,11 +1,11 @@
 import re
-from decimal import Decimal
+from typing import Any, Optional
 
 
 MERGE_TAG_RE = re.compile(r'\{\{\s*(\w+)\s*\}\}')
 
 
-def render(template: str, customer, extra: dict | None = None) -> str:
+def render(template: str, customer, extra: Optional[dict] = None) -> str:
     extra = extra or {}
     last_order = customer.orders.order_by('-ordered_at').first() if hasattr(customer, 'orders') else None
     ctx = {
