@@ -13,6 +13,7 @@ local_settings.py
 db.sqlite3
 staticfiles/
 mediafiles/
+test-results/
 
 # Node
 node_modules/
