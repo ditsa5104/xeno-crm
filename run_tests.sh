@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Runs the suite inside the crm container (README.md's documented
-# `docker compose exec crm pytest`) and saves the full console output as a
-# timestamped markdown report, alongside the DEBUG trace pytest.ini writes
-# to crm/test-results/pytest.log.
+# Runs the suite in a one-off crm container (so it works whether or not
+# `crm` is already up) and saves the full console output as a timestamped
+# markdown report, alongside the DEBUG trace pytest.ini writes to
+# crm/test-results/pytest.log.
 set -uo pipefail
 
 cd "$(dirname "$0")"
@@ -20,7 +20,7 @@ trap 'rm -f "$STATUS_FILE"' EXIT
   echo "# Test run - $TIMESTAMP"
   echo
   echo '```'
-  docker compose exec -T crm pytest "$@" 2>&1
+  docker compose run --rm -T crm pytest "$@" 2>&1
   echo "$?" > "$STATUS_FILE"
   echo '```'
 } | tee "$REPORT_FILE"
